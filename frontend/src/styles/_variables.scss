@@ -1,0 +1,22 @@
+// src/styles/_variables.scss
+
+// 🎨 Màu chủ đạo (dễ dàng chỉnh theme)
+$color-primary: #1976d2; // Xanh cảnh sát cơ động
+$color-secondary: #00bcd4; // Xanh ngọc dịu
+$color-accent: #ffb300; // Vàng điểm nhấn
+$color-bg: #0b1220; // Nền tối dịu
+$color-surface: #0f172a; // Nền thẻ/card
+$color-border: #1f2937; // Viền mờ
+$color-text: #e2e8f0; // Màu chữ chính
+$color-muted: #94a3b8; // Chữ phụ
+
+// 🧱 Font
+$font-family-base: "Inter", "Segoe UI", system-ui, sans-serif;
+
+// 🧩 Bo góc và đổ bóng
+$radius-lg: 16px;
+$radius-md: 8px;
+$shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+// ⏱ Hiệu ứng chuyển động
+$transition-fast: 0.2s ease-in-out;

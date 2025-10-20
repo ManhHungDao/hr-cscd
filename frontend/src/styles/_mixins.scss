@@ -1,0 +1,11 @@
+// src/styles/_mixins.scss
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card-shadow($level: 1) {
+  // toán học trong SCSS nên dùng calc nếu muốn runtime; còn đây là compile-time OK:
+  box-shadow: 0 ($level * 2px) ($level * 4px) rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,71 @@
+// src/styles/_global.scss
+@use "./variables" as vars;
+
+// Map SCSS -> CSS variables (để React/MUI dùng var(--...))
+:root {
+  --color-primary: #{vars.$color-primary};
+  --color-secondary: #{vars.$color-secondary};
+  --color-accent: #{vars.$color-accent};
+  --color-bg: #{vars.$color-bg};
+  --color-surface: #{vars.$color-surface};
+  --color-border: #{vars.$color-border};
+  --color-text: #{vars.$color-text};
+  --color-muted: #{vars.$color-muted};
+
+  --radius-lg: #{vars.$radius-lg};
+  --radius-md: #{vars.$radius-md};
+  --shadow-soft: #{vars.$shadow-soft};
+  --font-family-base: #{vars.$font-family-base};
+  --transition-fast: #{vars.$transition-fast};
+}
+
+/* Từ đây dùng var(--...) để đồng bộ với JSX */
+* {
+  box-sizing: border-box;
+  transition: all var(--transition-fast);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+
+  &:hover {
+    /* gần tương đương lighten(border, 10%) ở runtime */
+    border-color: color-mix(in srgb, var(--color-border), white 10%);
+  }
+}
+
+button,
+.MuiButton-root {
+  border-radius: var(--radius-md) !important;
+  text-transform: none !important;
+}
+
+.MuiAppBar-root {
+  background-color: var(--color-surface) !important;
+}
