@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout.jsx";
 import LoginPage from "./pages/Auth/LoginPage.jsx";
-// import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
+import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
 // import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
 // import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
 // import AddSoldierForm from "./pages/Soldiers/AddSoldierForm.jsx";
@@ -13,7 +13,8 @@ import NotFound from "./pages/NotFound.jsx";
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<DashboardPage />} />
       {/* <Route element={<AdminLayout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />

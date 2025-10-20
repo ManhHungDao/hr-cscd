@@ -1,5 +1,3 @@
-import React from "react";
-
 const VARIANT_STYLES = {
   primary: {
     background: "#2563eb",

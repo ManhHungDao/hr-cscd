@@ -17,6 +17,22 @@
   --shadow-soft: #{vars.$shadow-soft};
   --font-family-base: #{vars.$font-family-base};
   --transition-fast: #{vars.$transition-fast};
+
+  --color-bg-light: #{vars.$color-bg-light};
+  --color-sidebar-bg: #{vars.$color-sidebar-bg};
+  --color-sidebar-active: #{vars.$color-sidebar-active};
+  --color-sidebar-text: #{vars.$color-sidebar-text};
+  --color-card-bg: #{vars.$color-card-bg};
+  --color-card-border: #{vars.$color-card-border};
+  --color-text-dark: #{vars.$color-text-dark};
+  --color-text-muted: #{vars.$color-text-muted};
+  --color-primary-blue: #{vars.$color-primary-blue};
+  --color-success: #{vars.$color-success};
+  --color-warning: #{vars.$color-warning};
+  --color-danger: #{vars.$color-danger};
+  --color-present: #{vars.$color-present};
+  --color-duty: #{vars.$color-duty};
+  --color-absent: #{vars.$color-absent};
 }
 
 /* Từ đây dùng var(--...) để đồng bộ với JSX */

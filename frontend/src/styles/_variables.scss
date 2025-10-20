@@ -20,3 +20,24 @@ $shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.3);
 
 // ⏱ Hiệu ứng chuyển động
 $transition-fast: 0.2s ease-in-out;
+
+// === Bảng màu giao diện Dashboard CSCĐ ===
+$color-bg-light: #f4f6f9;
+$color-sidebar-bg: #0b203d;
+$color-sidebar-active: #22a065;
+$color-sidebar-text: #eaf2ff;
+
+$color-card-bg: #ffffff;
+$color-card-border: #e2e8f0;
+
+$color-text-dark: #1e293b;
+$color-text-muted: #64748b;
+
+$color-primary-blue: #2f86eb;
+$color-success: #16a34a;
+$color-warning: #facc15;
+$color-danger: #dc2626;
+
+$color-present: #22c55e; // Đang trực
+$color-duty: #facc15; // Đi công tác
+$color-absent: #ef4444; // Vắng mặt
