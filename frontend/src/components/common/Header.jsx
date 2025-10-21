@@ -99,7 +99,7 @@ export default function Header({
           <Typography
             variant="subtitle1"
             sx={{
-              fontWeight: 600,
+              fontWeight: 400,
               color: "var(--color-text)",
               maxWidth: { xs: 120, sm: 200 },
               whiteSpace: "nowrap",

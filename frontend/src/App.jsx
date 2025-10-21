@@ -4,6 +4,8 @@ import LoginPage from "./pages/Auth/LoginPage.jsx";
 import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
+import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
+
 export default function App() {
   return (
     <Routes>
@@ -14,10 +16,10 @@ export default function App() {
       <Route element={<AdminLayout />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/list-soldiers" element={<ListSoldiers />} />
+        {/* <Route path="/detail-profile" element={<DepartmentPage />} /> */}
         {/* Khi bạn thêm các trang khác, chỉ cần thêm vào đây */}
         {/* 
-        <Route path="/soldiers" element={<ListSoldiers />} />
-        <Route path="/departments" element={<DepartmentPage />} />
         <Route path="/attendance" element={<AttendancePage />} />
         <Route path="/reports" element={<ReportPage />} /> 
         */}

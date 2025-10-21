@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar";
 import Header from "../components/common/Header";
 
-const SIDEBAR_W = 256; // bạn có thể thay đổi/collapse sau
+const SIDEBAR_W = 230; // bạn có thể thay đổi/collapse sau
 
 export default function AdminLayout() {
   return (
@@ -20,7 +20,7 @@ export default function AdminLayout() {
             "sidebar content"
           `,
           height: "100vh",
-          overflow: "hidden",
+          overflow: "auto",
         }}
       >
         {/* Sidebar trái, sticky theo viewport */}
@@ -53,8 +53,8 @@ export default function AdminLayout() {
         <Box
           sx={{
             gridArea: "content",
-            overflow: "hidden",
-            px: { xs: 2, md: 3 },
+            overflow: "auto",
+            // px: { xs: 2, md: 3 },
             pb: 3,
           }}
         >
