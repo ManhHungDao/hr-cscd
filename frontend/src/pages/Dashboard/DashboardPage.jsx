@@ -2,23 +2,22 @@ import { motion } from "framer-motion";
 import { Box, Container, Grid } from "@mui/material";
 import { BarChart2, ShoppingBag, Users, Zap } from "lucide-react";
 
-import Header from "../../components/common/Header"; // bản MUI đã chuyển
 import StatCard from "../../components/common/StatCard"; // bản MUI đã chuyển
 import SalesOverviewChart from "../../components/sales/SalesOverviewChart";
 
 const OverviewPage = () => {
   return (
-    <Box sx={{ flex: 1, overflow: "auto", position: "relative", zIndex: 10 }}>
-      <Header title="Overview" />
-
+    <Box
+      sx={{
+        flex: 1,
+        overflow: "auto",
+        position: "relative",
+        zIndex: 10,
+      }}
+    >
       <Container maxWidth="lg" sx={{ py: 3 }}>
         {/* STATS */}
-        <Box
-          component={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
+        <Box>
           <Grid container spacing={2} sx={{ mb: 4 }}>
             <Grid item xs={12} sm={6} lg={3}>
               <StatCard

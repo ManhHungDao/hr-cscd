@@ -1,34 +1,65 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Box, Button, Stack } from "@mui/material";
+// src/layouts/AdminLayout.jsx
+import { Box, CssBaseline } from "@mui/material";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../components/common/Sidebar";
+import Header from "../components/common/Header";
 
-const NavButton = ({ to, label }) => {
-  const loc = useLocation();
-  const active = loc.pathname.startsWith(to);
-  return (
-    <Button component={Link} to={to} variant={active ? "contained" : "text"} sx={{ borderRadius: 2 }}>
-      {label}
-    </Button>
-  );
-};
+const SIDEBAR_W = 256; // bạn có thể thay đổi/collapse sau
 
 export default function AdminLayout() {
   return (
     <Box>
-      <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: "1px solid #1f2937" }}>
-        <Toolbar sx={{ display: "flex", gap: 2, justifyContent: "space-between" }}>
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>HR-CSCD</Typography>
-          <Stack direction="row" spacing={1}>
-            <NavButton to="/dashboard" label="Dashboard" />
-            <NavButton to="/soldiers" label="Cán bộ/Chiến sĩ" />
-            <NavButton to="/departments" label="Đơn vị" />
-            <NavButton to="/attendance" label="Chấm công" />
-            <NavButton to="/reports" label="Báo cáo" />
-          </Stack>
-          <Button component={Link} to="/login" color="inherit">Đăng nhập</Button>
-        </Toolbar>
-      </AppBar>
-      <Box className="container">
-        <Outlet />
+      <CssBaseline />
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: `${SIDEBAR_W}px 1fr`,
+          gridTemplateRows: "auto 1fr",
+          gridTemplateAreas: `
+            "sidebar header"
+            "sidebar content"
+          `,
+          height: "100vh",
+          overflow: "hidden",
+        }}
+      >
+        {/* Sidebar trái, sticky theo viewport */}
+        <Box
+          sx={{
+            gridArea: "sidebar",
+            position: "sticky",
+            top: 0,
+            alignSelf: "start",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
+          <Sidebar />
+        </Box>
+
+        {/* Header trên cùng, sticky, tự chiếm phần còn lại */}
+        <Box
+          sx={{
+            gridArea: "header",
+            position: "sticky",
+            top: 0,
+            zIndex: (t) => t.zIndex.appBar,
+          }}
+        >
+          <Header />
+        </Box>
+
+        {/* Nội dung, auto scroll, không bị che bởi header */}
+        <Box
+          sx={{
+            gridArea: "content",
+            overflow: "hidden",
+            px: { xs: 2, md: 3 },
+            pb: 3,
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

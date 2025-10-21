@@ -1,26 +1,25 @@
 import { useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   Box,
-  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Tooltip,
   Divider,
+  Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   BarChart2,
   DollarSign,
-  Menu as MenuIcon,
   Settings,
   ShoppingBag,
   ShoppingCart,
   TrendingUp,
   Users,
 } from "lucide-react";
+import Img from "../../assets/huyhieuCAND.png";
 
 const SIDEBAR_ITEMS = [
   { name: "Overview", icon: BarChart2, color: "#6366f1", href: "/" },
@@ -40,10 +39,14 @@ const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <motion.div
-      animate={{ width: open ? EXPANDED_W : COLLAPSED_W }}
-      transition={{ type: "spring", stiffness: 260, damping: 28 }}
-      style={{ position: "relative", zIndex: 10, flexShrink: 0 }}
+    <Box
+      // Bỏ animation: width đổi tức thì theo state
+      sx={{
+        width: open ? EXPANDED_W : COLLAPSED_W,
+        position: "relative",
+        zIndex: 10,
+        flexShrink: 0,
+      }}
     >
       <Box
         sx={{
@@ -51,25 +54,40 @@ const Sidebar = () => {
           p: 2,
           display: "flex",
           flexDirection: "column",
-          bgcolor: "rgba(31,41,55,0.5)", // tương đương bg-gray-800/50
-          backdropFilter: "blur(8px)", // backdrop-blur-md
-          borderRight: "1px solid rgba(55,65,81,1)", // border-gray-700
+          bgcolor: "rgba(31,41,55,0.5)",
+          backdropFilter: "blur(8px)",
+          borderRight: "1px solid rgba(55,65,81,1)",
         }}
       >
+        {/* Logo: căn giữa phía trên */}
         <Tooltip title={open ? "Thu gọn" : "Mở rộng"} placement="right">
-          <IconButton
+          <Stack
             onClick={() => setOpen(!open)}
             sx={{
-              alignSelf: "flex-start",
-              borderRadius: "999px",
-              "&:hover": { bgcolor: "rgba(55,65,81,0.8)" },
+              width: "100%",
+              alignItems: "center", // căn giữa ngang
+              justifyContent: "center", // căn giữa dọc trong khung logo
+              pt: 1,
+              pb: 1, // khoảng trống phía trên
+              cursor: "pointer",
             }}
-            component={motion.button}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.94 }}
           >
-            <MenuIcon size={24} />
-          </IconButton>
+            <Box
+              sx={{
+                width: open ? 120 : 56, // thu nhỏ khi collapse cho gọn
+                height: open ? 120 : 56,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={Img}
+                alt="Logo"
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
+            </Box>
+          </Stack>
         </Tooltip>
 
         <Divider sx={{ my: 2, borderColor: "rgba(75,85,99,0.6)" }} />
@@ -102,35 +120,25 @@ const Sidebar = () => {
                     <Icon size={20} style={{ color: item.color }} />
                   </ListItemIcon>
 
-                  {/* Ẩn/hiện nhãn với animation */}
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <motion.div
-                        style={{ overflow: "hidden", whiteSpace: "nowrap" }}
-                        initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: "auto" }}
-                        exit={{ opacity: 0, width: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <ListItemText
-                          primary={item.name}
-                          primaryTypographyProps={{
-                            fontSize: 14,
-                            fontWeight: 600,
-                            color: "#F3F4F6", // text-gray-100 tương đương
-                          }}
-                          sx={{ ml: 1 }}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Bỏ AnimatePresence/transition: render thẳng */}
+                  {open && (
+                    <ListItemText
+                      primary={item.name}
+                      primaryTypographyProps={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: "#F3F4F6",
+                      }}
+                      sx={{ ml: 1 }}
+                    />
+                  )}
                 </ListItemButton>
               );
             })}
           </List>
         </Box>
       </Box>
-    </motion.div>
+    </Box>
   );
 };
 
