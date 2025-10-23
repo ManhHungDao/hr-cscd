@@ -66,7 +66,6 @@ export default function ShiftForm({ targets, draft, setDraft, onAdd, onSave }) {
           onChange={(e) =>
             setDraft((d) => ({ ...d, required: Number(e.target.value) }))
           }
-          // helperText={wrapped ? "Ca qua đêm (qua 0h)" : "Trong ngày (0–24h)"}
         />
       </Grid>
       <Grid item xs={6} md={3}>

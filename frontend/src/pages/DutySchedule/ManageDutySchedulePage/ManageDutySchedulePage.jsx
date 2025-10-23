@@ -13,15 +13,16 @@ import {
   Alert,
 } from "@mui/material";
 import ScheduleIcon from "@mui/icons-material/Schedule";
-import CommanderCard from "./components/duty/CommanderCard";
-import TargetSummaryTable from "./components/duty/TargetSummaryTable";
-import ShiftForm from "./components/duty/ShiftForm";
-import ShiftTable from "./components/duty/ShiftTable";
+import CommanderCard from "../components/duty/CommanderCard";
+import TargetSummaryTable from "../components/duty/TargetSummaryTable";
+import ShiftForm from "../components/duty/ShiftForm";
+import ShiftTable from "../components/duty/ShiftTable";
+import SoldierPickerDialog from "../components/duty/SoldierPickerDialog";
 import {
   timeToMinutes,
   rangesOverlap,
   isValidRange,
-} from "./components/utils/time";
+} from "../components/utils/time";
 
 const MOCK_COMMANDERS = [
   { id: "c01", name: "Đ/c Nguyễn Văn An" },
@@ -136,18 +137,27 @@ export default function DutySchedulePage() {
     setShifts((prev) => prev.filter((s) => s.id !== id));
   }
 
-  function toggleAssign(shiftId, soldierId) {
+  // Soldier picker state
+  const [picker, setPicker] = useState({ open: false, shiftId: null });
+  const currentShift = useMemo(
+    () => shifts.find((s) => s.id === picker.shiftId) || null,
+    [picker, shifts]
+  );
+  function openAssign(shift) {
+    setPicker({ open: true, shiftId: shift.id });
+  }
+  function closeAssign() {
+    setPicker({ open: false, shiftId: null });
+  }
+  function saveAssign(selectedIds) {
     setShifts((prev) =>
-      prev.map((s) => {
-        if (s.id !== shiftId) return s;
-        const has = s.assigned.includes(soldierId);
-        let next = has
-          ? s.assigned.filter((x) => x !== soldierId)
-          : [...s.assigned, soldierId];
-        if (next.length > s.required) next = next.slice(0, s.required);
-        return { ...s, assigned: next };
-      })
+      prev.map((s) =>
+        s.id === picker.shiftId
+          ? { ...s, assigned: selectedIds.slice(0, s.required) }
+          : s
+      )
     );
+    closeAssign();
   }
 
   function exportJSON() {
@@ -208,7 +218,7 @@ export default function DutySchedulePage() {
             <CardHeader
               avatar={<ScheduleIcon />}
               title="Ca trực trong ngày"
-              subheader="Không trùng lặp trong CÙNG mục tiêu — hỗ trợ ca qua đêm (0h–24h)"
+              subheader="Không trùng trong CÙNG mục tiêu — hỗ trợ ca qua đêm (0h–24h)"
             />
             <Divider />
             <CardContent>
@@ -223,15 +233,23 @@ export default function DutySchedulePage() {
               <ShiftTable
                 shifts={sortedShifts}
                 targets={targets}
-                soldiers={soldiers}
                 onEdit={startEdit}
                 onRemove={removeShift}
-                onToggleAssign={toggleAssign}
+                onOpenAssign={openAssign}
               />
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+
+      <SoldierPickerDialog
+        open={picker.open}
+        onClose={closeAssign}
+        onSave={saveAssign}
+        soldiers={MOCK_SOLDIERS}
+        shift={currentShift}
+        max={currentShift?.required || 0}
+      />
 
       <Snackbar
         open={toast.open}

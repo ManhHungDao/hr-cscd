@@ -7,20 +7,20 @@ import {
   Typography,
   Stack,
   Chip,
-  Tooltip,
   IconButton,
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { isWrapped } from "../utils/time";
 
 export default function ShiftTable({
   shifts,
   targets,
-  soldiers,
   onEdit,
   onRemove,
-  onToggleAssign,
+  onOpenAssign,
 }) {
   return (
     <Table size="small">
@@ -47,6 +47,7 @@ export default function ShiftTable({
         {shifts.map((s) => {
           const tgt = targets.find((t) => t.id === s.targetId);
           const wrapped = isWrapped(s.start, s.end);
+          const count = s.assigned?.length || 0;
           return (
             <TableRow key={s.id} hover>
               <TableCell>{s.id}</TableCell>
@@ -62,20 +63,14 @@ export default function ShiftTable({
                 <Chip label={`${s.required} người`} size="small" />
               </TableCell>
               <TableCell>
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                  {soldiers.map((u) => (
-                    <Tooltip key={u.id} title={u.name}>
-                      <Chip
-                        variant={
-                          s.assigned.includes(u.id) ? "filled" : "outlined"
-                        }
-                        label={u.name}
-                        onClick={() => onToggleAssign(s.id, u.id)}
-                        size="small"
-                      />
-                    </Tooltip>
-                  ))}
-                </Stack>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={<GroupAddIcon />}
+                  onClick={() => onOpenAssign(s)}
+                >
+                  Chọn chiến sĩ ({count}/{s.required})
+                </Button>
               </TableCell>
               <TableCell align="right">
                 <IconButton size="small" onClick={() => onEdit(s)}>

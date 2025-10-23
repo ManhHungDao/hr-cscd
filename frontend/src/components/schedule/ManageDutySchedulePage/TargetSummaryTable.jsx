@@ -39,7 +39,7 @@ export default function TargetSummaryTable({ targets, shifts }) {
           <TableHead>
             <TableRow>
               <TableCell>Mục tiêu</TableCell>
-              <TableCell align="right">Quân số yêu cầu</TableCell>
+              <TableCell align="right">Quân số</TableCell>
               <TableCell align="right">Đã phân</TableCell>
             </TableRow>
           </TableHead>
@@ -50,7 +50,7 @@ export default function TargetSummaryTable({ targets, shifts }) {
                 <TableCell align="right">{t.required}</TableCell>
                 <TableCell align="right">
                   <Chip
-                    label={`${stats[t.id]?.assignedTotal || 0} người`}
+                    label={`${stats[t.id]?.assignedTotal || 0} lượt trực`}
                     size="small"
                   />
                 </TableCell>

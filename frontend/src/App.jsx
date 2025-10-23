@@ -6,7 +6,7 @@ import NotFound from "./pages/NotFound.jsx";
 
 import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
 import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
-import DutySchedulePage from "./pages/DutySchedule/DutySchedulePage.jsx";
+import DutySchedulePage from "./pages/DutySchedule/ViewDutySchedulePage/DutySchedulePage.jsx";
 export default function App() {
   return (
     <Routes>
