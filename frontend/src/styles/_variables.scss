@@ -1,58 +1,14 @@
-// // src/styles/_variables.scss
-
-// // 🎨 Màu chủ đạo (dễ dàng chỉnh theme)
-// $color-primary: #1976d2; // Xanh cảnh sát cơ động
-// $color-secondary: #00bcd4; // Xanh ngọc dịu
-// $color-accent: #ffb300; // Vàng điểm nhấn
-// $color-bg: #0b1220; // Nền tối dịu
-// $color-surface: #0f172a; // Nền thẻ/card
-// $color-border: #1f2937; // Viền mờ
-// $color-text: #e2e8f0; // Màu chữ chính
-// $color-muted: #94a3b8; // Chữ phụ
-
-// // 🧱 Font
-// $font-family-base: "Inter", "Segoe UI", system-ui, sans-serif;
-
-// // 🧩 Bo góc và đổ bóng
-// $radius-lg: 16px;
-// $radius-md: 8px;
-// $shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.3);
-
-// // ⏱ Hiệu ứng chuyển động
-// $transition-fast: 0.2s ease-in-out;
-
-// // === Bảng màu giao diện Dashboard CSCĐ ===
-// $color-bg-light: #f4f6f9;
-// $color-sidebar-bg: #0b203d;
-// $color-sidebar-active: #22a065;
-// $color-sidebar-text: #eaf2ff;
-
-// $color-card-bg: #ffffff;
-// $color-card-border: #e2e8f0;
-
-// $color-text-dark: #1e293b;
-// $color-text-muted: #64748b;
-
-// $color-primary-blue: #2f86eb;
-// $color-success: #16a34a;
-// $color-warning: #facc15;
-// $color-danger: #dc2626;
-
-// $color-present: #22c55e; // Đang trực
-// $color-duty: #facc15; // Đi công tác
-// $color-absent: #ef4444; // Vắng mặt
-
 // src/styles/_variables.scss
 
-// 🎨 Màu chủ đạo (theo bảng màu ngành CSCĐ)
-$color-primary: #346a47; // Xanh lá đậm - chủ đạo (Sidebar, điểm nhấn ngành)
-$color-secondary: #38a169; // Xanh lá nhạt - nhấn nhẹ / success
-$color-accent: #fbbf24; // Vàng logo - nhấn mạnh (icons, headers)
-$color-bg: #f4f7fe; // Nền chính rất nhạt
-$color-surface: #ffffff; // Nền thẻ / card
-$color-border: #e2e8f0; // Viền mờ nhẹ
-$color-text: #2d3748; // Màu chữ chính trên nền sáng
-$color-muted: #64748b; // Màu chữ phụ, placeholder
+// 🎨 Màu chủ đạo (dễ dàng chỉnh theme)
+$color-primary: #1976d2; // Xanh cảnh sát cơ động
+$color-secondary: #00bcd4; // Xanh ngọc dịu
+$color-accent: #ffb300; // Vàng điểm nhấn
+$color-bg: #0b1220; // Nền tối dịu
+$color-surface: #0f172a; // Nền thẻ/card
+$color-border: #1f2937; // Viền mờ
+$color-text: #e2e8f0; // Màu chữ chính
+$color-muted: #94a3b8; // Chữ phụ
 
 // 🧱 Font
 $font-family-base: "Inter", "Segoe UI", system-ui, sans-serif;
@@ -60,34 +16,78 @@ $font-family-base: "Inter", "Segoe UI", system-ui, sans-serif;
 // 🧩 Bo góc và đổ bóng
 $radius-lg: 16px;
 $radius-md: 8px;
-$shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.3);
 
 // ⏱ Hiệu ứng chuyển động
 $transition-fast: 0.2s ease-in-out;
 
 // === Bảng màu giao diện Dashboard CSCĐ ===
+$color-bg-light: #f4f6f9;
+$color-sidebar-bg: #0b203d;
+$color-sidebar-active: #22a065;
+$color-sidebar-text: #eaf2ff;
 
-// 🌿 Giao diện nền và sidebar
-$color-bg-light: #f4f7fe; // Nền chính trang
-$color-sidebar-bg: #004d40; // Sidebar xanh lá đậm
-$color-sidebar-active: #38a169; // Mục đang chọn trong sidebar
-$color-sidebar-text: #ffffff; // Chữ trắng trên sidebar
-
-// 🧩 Card / Khung / Bảng
 $color-card-bg: #ffffff;
 $color-card-border: #e2e8f0;
 
-// ✍️ Chữ và nhấn
-$color-text-dark: #2d3748;
+$color-text-dark: #1e293b;
 $color-text-muted: #64748b;
 
-// ⚡️ Trạng thái và điểm nhấn
-$color-primary-green: #346a47;
-$color-success: #38a169;
-$color-warning: #fbbf24;
+$color-primary-blue: #2f86eb;
+$color-success: #16a34a;
+$color-warning: #facc15;
 $color-danger: #dc2626;
 
-// 🚨 Trạng thái điểm danh
-$color-present: #38a169; // Đang trực
-$color-duty: #fbbf24; // Công tác
-$color-absent: #dc2626; // Vắng mặt
+$color-present: #22c55e; // Đang trực
+$color-duty: #facc15; // Đi công tác
+$color-absent: #ef4444; // Vắng mặt
+
+// src/styles/_variables.scss
+
+// // 🎨 Màu chủ đạo (theo bảng màu ngành CSCĐ)
+// $color-primary: #346a47; // Xanh lá đậm - chủ đạo (Sidebar, điểm nhấn ngành)
+// $color-secondary: #38a169; // Xanh lá nhạt - nhấn nhẹ / success
+// $color-accent: #fbbf24; // Vàng logo - nhấn mạnh (icons, headers)
+// $color-bg: #f4f7fe; // Nền chính rất nhạt
+// $color-surface: #ffffff; // Nền thẻ / card
+// $color-border: #e2e8f0; // Viền mờ nhẹ
+// $color-text: #2d3748; // Màu chữ chính trên nền sáng
+// $color-muted: #64748b; // Màu chữ phụ, placeholder
+
+// // 🧱 Font
+// $font-family-base: "Inter", "Segoe UI", system-ui, sans-serif;
+
+// // 🧩 Bo góc và đổ bóng
+// $radius-lg: 16px;
+// $radius-md: 8px;
+// $shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+// // ⏱ Hiệu ứng chuyển động
+// $transition-fast: 0.2s ease-in-out;
+
+// // === Bảng màu giao diện Dashboard CSCĐ ===
+
+// // 🌿 Giao diện nền và sidebar
+// $color-bg-light: #f4f7fe; // Nền chính trang
+// $color-sidebar-bg: #004d40; // Sidebar xanh lá đậm
+// $color-sidebar-active: #38a169; // Mục đang chọn trong sidebar
+// $color-sidebar-text: #ffffff; // Chữ trắng trên sidebar
+
+// // 🧩 Card / Khung / Bảng
+// $color-card-bg: #ffffff;
+// $color-card-border: #e2e8f0;
+
+// // ✍️ Chữ và nhấn
+// $color-text-dark: #2d3748;
+// $color-text-muted: #64748b;
+
+// // ⚡️ Trạng thái và điểm nhấn
+// $color-primary-green: #346a47;
+// $color-success: #38a169;
+// $color-warning: #fbbf24;
+// $color-danger: #dc2626;
+
+// // 🚨 Trạng thái điểm danh
+// $color-present: #38a169; // Đang trực
+// $color-duty: #fbbf24; // Công tác
+// $color-absent: #dc2626; // Vắng mặt

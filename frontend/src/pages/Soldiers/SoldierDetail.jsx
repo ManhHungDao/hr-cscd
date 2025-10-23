@@ -21,7 +21,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PrintIcon from "@mui/icons-material/Print";
 import EditIcon from "@mui/icons-material/Edit";
-
+import { useNavigate } from "react-router-dom";
 // ---- mock profile ----
 const mockProfile = {
   avatar: "https://i.pravatar.cc/120?img=35",
@@ -31,19 +31,20 @@ const mockProfile = {
   code: "A213-B456",
   unitLine: "Trung đội 1, Đại đội C1, 6 Hàoỉ",
   basic: {
-    NgaySinh: "15/03/1990",
-    NoiSinh: "Hà Nội",
-    QueQuan: "Nam Định",
-    TonToc: "Địa chỉ Số 123, P. Trần Hưng Đạo, Q Hoàn Kiếm, TP. Hà Nội",
+    "Ngày Sinh": "15/03/1990",
+    "Nơi Sinh": "Hà Nội",
+    "Quê Quán": "Nam Định",
+    "Địa chỉ thường trú":
+      "Địa chỉ Số 123, P. Trần Hưng Đạo, Q Hoàn Kiếm, TP. Hà Nội",
   },
   contact: {
-    SanhQuan: "SDT: 0912 345 778",
+    "Số Điện Thoại": "SDT: 0912 345 778",
     Email: "binhlt, binhlt@cand.gov.vn",
-    TogGoc: "Không",
+    "Tôn Giáo": "Không",
   },
   party: {
-    ThongTinDangDoan: "Sĩa đầm",
-    ThongTinGiaDinh: "Thẻn bằng Không",
+    "Ngày vào Công an nhân dân": "15/03/1990",
+    "Ngày vào Đảng": "15/03/1990",
   },
 };
 
@@ -109,12 +110,12 @@ function TabPanel({ value, index, children }) {
 }
 
 export default function SoldierDetail() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [tab, setTab] = useState(0);
-
   return (
     <Box sx={{ bgcolor: theme.palette.grey[100], minHeight: "100vh", py: 3 }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         {/* Header */}
         <Card
           elevation={0}
@@ -127,11 +128,13 @@ export default function SoldierDetail() {
         >
           <CardContent>
             <Stack direction="row" spacing={2} alignItems="center">
-              <Tooltip title="Quay lại danh sách">
-                <IconButton color="inherit" size="small">
-                  <ArrowBackIcon />
-                </IconButton>
-              </Tooltip>
+              <IconButton
+                color="inherit"
+                size="small"
+                onClick={() => navigate(-1)}
+              >
+                <ArrowBackIcon />
+              </IconButton>
 
               <Avatar
                 src={mockProfile.avatar}
@@ -209,9 +212,10 @@ export default function SoldierDetail() {
             <Tab id="tab-2" label="Đào tạo & Huấn luyện" />
             <Tab id="tab-3" label="Khen thưởng Kỷ luật" />
             <Tab id="tab-4" label="Lịch sử Chấm công" />
+            <Tab id="tab-5" label="Hồ sơ liên quan" />
           </Tabs>
 
-          <Box sx={{ p: 2.5 }}>
+          <Box>
             {/* TAB 0: Thông tin cơ bản */}
             <TabPanel value={tab} index={0}>
               <Grid container spacing={2.5}>
@@ -314,6 +318,24 @@ export default function SoldierDetail() {
                 <Typography color="text.secondary">
                   (Khung trống) — Thêm bảng chấm công theo ngày/ca, vắng phép,
                   công tác, tăng ca…
+                </Typography>
+              </SectionCard>
+            </TabPanel>
+
+            {/* TAB 5: Hồ sở tải lên */}
+            <TabPanel value={tab} index={5}>
+              <SectionCard
+                title="Hồ sở tải lên"
+                action={
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    label="Chưa có dữ liệu"
+                  />
+                }
+              >
+                <Typography color="text.secondary">
+                  (Khung trống) — Tải lên các file/ tệp liên quan đến cán bộ
                 </Typography>
               </SectionCard>
             </TabPanel>

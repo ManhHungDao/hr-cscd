@@ -371,7 +371,7 @@ export default function DashboardOverview() {
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
-            <CardBox title="Ghi chú nhanh" icon={<Avatar>🗒️</Avatar>}>
+            <CardBox title="Công tác huấn luyện" icon={<Avatar>🗒️</Avatar>}>
               <Typography variant="body2" color="text.secondary">
                 Đây là khu vực dữ liệu ảo. Bạn có thể thay bằng API thật
                 (REST/GraphQL) hoặc Redux query.

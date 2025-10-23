@@ -5,7 +5,8 @@ import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
-
+import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
+import DutySchedulePage from "./pages/DutySchedule/DutySchedulePage.jsx";
 export default function App() {
   return (
     <Routes>
@@ -17,7 +18,8 @@ export default function App() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/list-soldiers" element={<ListSoldiers />} />
-        {/* <Route path="/detail-profile" element={<DepartmentPage />} /> */}
+        <Route path="/detail-profile" element={<SoldierDetail />} />
+        <Route path="/duty-schedule" element={<DutySchedulePage />} />
         {/* Khi bạn thêm các trang khác, chỉ cần thêm vào đây */}
         {/* 
         <Route path="/attendance" element={<AttendancePage />} />

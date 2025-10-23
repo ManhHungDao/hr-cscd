@@ -13,6 +13,7 @@ import {
   InputAdornment,
   Stack,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -149,10 +150,13 @@ export default function Header({
             }}
           >
             <MenuItem
-              onClick={() => {
-                setAnchorEl(null);
-                onProfile?.();
-              }}
+              // onClick={() => {
+              //   setAnchorEl(null);
+              //   onProfile?.();
+              // }}
+              component={RouterLink}
+              to="/detail-profile"
+              onClick={() => setAnchorEl(null)}
             >
               <PersonIcon fontSize="small" sx={{ mr: 1 }} />
               Xem hồ sơ cá nhân

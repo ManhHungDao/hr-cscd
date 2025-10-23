@@ -18,22 +18,57 @@ import {
   ShoppingCart,
   TrendingUp,
   Users,
+  ScrollText,
+  CalendarDays,
+  Warehouse,
+  HeartPulse,
 } from "lucide-react";
 import Img from "../../assets/huyhieuCAND.png";
 
 const SIDEBAR_ITEMS = [
-  { name: "Thông tin chung", icon: BarChart2, color: "#6366f1", href: "/" },
-  // { name: "Products", icon: ShoppingBag, color: "#8B5CF6", href: "/products" },
+  {
+    name: "Thông tin chung",
+    icon: BarChart2,
+    color: "var(--color-text)",
+    href: "/dashboard",
+  },
   {
     name: "Cán bộ chiến sĩ",
     icon: Users,
-    color: "#EC4899",
+    color: "var(--color-text)",
     href: "/list-soldiers",
   },
-  { name: "Sales", icon: DollarSign, color: "#10B981", href: "/sales" },
-  { name: "Orders", icon: ShoppingCart, color: "#F59E0B", href: "/orders" },
-  { name: "Analytics", icon: TrendingUp, color: "#3B82F6", href: "/analytics" },
-  { name: "Settings", icon: Settings, color: "#6EE7B7", href: "/settings" },
+
+  {
+    name: "Lịch trực",
+    icon: CalendarDays,
+    color: "var(--color-text)",
+    href: "/duty-schedule",
+  },
+  {
+    name: "Huấn luyện",
+    icon: HeartPulse,
+    color: "var(--color-text)",
+    href: "/training ",
+  },
+  {
+    name: "Văn bản",
+    icon: ScrollText,
+    color: "var(--color-text)",
+    href: "/documents",
+  },
+  {
+    name: "Kho",
+    icon: Warehouse,
+    color: "var(--color-text)",
+    href: "/warehouse ",
+  },
+  {
+    name: "Cài đặt",
+    icon: Settings,
+    color: "var(--color-text)",
+    href: "/settings",
+  },
 ];
 
 const COLLAPSED_W = 80;
