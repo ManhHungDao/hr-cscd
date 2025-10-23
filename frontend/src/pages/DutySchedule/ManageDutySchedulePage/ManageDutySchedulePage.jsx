@@ -186,7 +186,7 @@ export default function ManageDutySchedulePage() {
   );
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       <Stack
         direction="row"
         alignItems="center"

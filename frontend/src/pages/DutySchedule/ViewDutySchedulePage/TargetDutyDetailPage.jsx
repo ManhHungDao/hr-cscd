@@ -37,7 +37,7 @@ export default function TargetDutyDetailPage() {
   const goManage = () => navigate("/duty-schedule/manage");
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         alignItems={{ xs: "flex-start", sm: "center" }}

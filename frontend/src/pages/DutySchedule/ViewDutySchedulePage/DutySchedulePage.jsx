@@ -30,7 +30,7 @@ export default function DutySchedulePage() {
   const goManage = () => navigate("/duty-schedule/manage"); // placeholder
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         alignItems={{ xs: "flex-start", sm: "center" }}

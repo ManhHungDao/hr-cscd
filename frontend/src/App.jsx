@@ -12,7 +12,7 @@ import ManageDutySchedulePage from "./pages/DutySchedule/ManageDutySchedulePage/
 import TrainingList from "@/pages/Training/TrainingList";
 import TrainingDetail from "@/pages/Training/TrainingDetail";
 import TrainingManage from "@/pages/Training/TrainingManage";
-
+import DocumentManagerPage from "@/pages/Documents/DocumentManager.jsx";
 export default function App() {
   return (
     <Routes>
@@ -37,6 +37,7 @@ export default function App() {
         <Route path="/training" element={<TrainingList />} />
         <Route path="/training/:id" element={<TrainingDetail />} />
         <Route path="/training/manage" element={<TrainingManage />} />
+        <Route path="/documents" element={<DocumentManagerPage />} />
         {/* Khi bạn thêm các trang khác, chỉ cần thêm vào đây */}
         {/* 
         <Route path="/attendance" element={<AttendancePage />} />
