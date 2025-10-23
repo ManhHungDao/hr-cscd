@@ -13,7 +13,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import { isWrapped } from "../utils/time";
+import { isWrapped } from "../../../utils/time";
 
 export default function ShiftTable({
   shifts,

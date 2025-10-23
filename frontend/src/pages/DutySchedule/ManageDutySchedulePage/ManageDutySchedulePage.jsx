@@ -11,18 +11,21 @@ import {
   Button,
   Snackbar,
   Alert,
+  IconButton,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ScheduleIcon from "@mui/icons-material/Schedule";
-import CommanderCard from "../components/duty/CommanderCard";
-import TargetSummaryTable from "../components/duty/TargetSummaryTable";
-import ShiftForm from "../components/duty/ShiftForm";
-import ShiftTable from "../components/duty/ShiftTable";
-import SoldierPickerDialog from "../components/duty/SoldierPickerDialog";
+import CommanderCard from "@components/schedule/ManageDutySchedulePage/CommanderCard";
+import TargetSummaryTable from "@components/schedule/ManageDutySchedulePage/TargetSummaryTable";
+import ShiftForm from "@components/schedule/ManageDutySchedulePage/ShiftForm";
+import ShiftTable from "@components/schedule/ManageDutySchedulePage/ShiftTable";
+import SoldierPickerDialog from "@components/schedule/ManageDutySchedulePage/SoldierPickerDialog";
 import {
   timeToMinutes,
   rangesOverlap,
   isValidRange,
-} from "../components/utils/time";
+} from "../../../utils/time";
+import { useNavigate } from "react-router-dom";
 
 const MOCK_COMMANDERS = [
   { id: "c01", name: "Đ/c Nguyễn Văn An" },
@@ -45,7 +48,8 @@ const MOCK_TARGETS = [
   { id: "t03", name: "Mục tiêu C – Kho vật chứng", required: 8 },
 ];
 
-export default function DutySchedulePage() {
+export default function ManageDutySchedulePage() {
+  const navigate = useNavigate();
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [commanderId, setCommanderId] = useState("");
   const [targets, setTargets] = useState(MOCK_TARGETS);
@@ -189,9 +193,14 @@ export default function DutySchedulePage() {
         justifyContent="space-between"
         sx={{ mb: 2 }}
       >
-        <Typography variant="h5" fontWeight={700}>
-          Quản lý lịch trực
-        </Typography>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <IconButton color="inherit" size="small" onClick={() => navigate(-1)}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h5" fontWeight={700}>
+            Quản lý lịch trực
+          </Typography>
+        </Stack>
         <Stack direction="row" spacing={1}>
           <Button variant="outlined" onClick={exportJSON}>
             Xuất JSON

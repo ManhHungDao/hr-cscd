@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound.jsx";
 import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
 import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
 import DutySchedulePage from "./pages/DutySchedule/ViewDutySchedulePage/DutySchedulePage.jsx";
+import TargetDutyDetailPage from "./pages/DutySchedule/ViewDutySchedulePage/TargetDutyDetailPage.jsx";
+import ManageDutySchedulePage from "./pages/DutySchedule/ManageDutySchedulePage/ManageDutySchedulePage.jsx";
 export default function App() {
   return (
     <Routes>
@@ -20,6 +22,15 @@ export default function App() {
         <Route path="/list-soldiers" element={<ListSoldiers />} />
         <Route path="/detail-profile" element={<SoldierDetail />} />
         <Route path="/duty-schedule" element={<DutySchedulePage />} />
+        <Route
+          path="/duty-schedule/targets/:id"
+          element={<TargetDutyDetailPage />}
+        />
+        <Route
+          path="/duty-schedule/manage"
+          element={<ManageDutySchedulePage />}
+        />
+
         {/* Khi bạn thêm các trang khác, chỉ cần thêm vào đây */}
         {/* 
         <Route path="/attendance" element={<AttendancePage />} />

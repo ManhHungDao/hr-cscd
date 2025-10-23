@@ -1,37 +1,60 @@
-// pages/DutySchedulePage.jsx
-import { Container, Grid, Box, Typography, Paper } from "@mui/material";
-import CommanderCard from "@components/schedule/ViewDutySchedulePage/CommanderCard";
-import ShiftList from "@components/schedule/ViewDutySchedulePage/ShiftList";
-import { dutyData, dateForView } from "./mockData";
+// src/pages/DutySchedulePage.jsx
+import { useMemo } from "react";
+import { Container, Grid, Stack, Typography, Button } from "@mui/material";
+import CommanderTodayCard from "@components/schedule/ViewDutySchedulePage/CommanderTodayCard";
+import TargetCard from "@components/schedule/ViewDutySchedulePage/TargetCard";
+import {
+  dateForView,
+  dayCommander,
+  targets,
+  buildTargetSchedule,
+} from "./dutyMock";
+import { useNavigate } from "react-router-dom";
 
 export default function DutySchedulePage() {
-  // Có thể truyền date qua props / route param; hiện dùng mock date
+  const navigate = useNavigate();
+
+  // Chuẩn bị preview 1 vài slot đầu tiên cho mỗi mục tiêu
+  const data = useMemo(() => {
+    return targets.map((t) => {
+      const expanded = buildTargetSchedule(t); // danh sách ca + slot
+      const previewSlots = expanded.flatMap((s) => s.slots).slice(0, 5);
+      return { ...t, previewSlots };
+    });
+  }, []);
+
+  const openDetail = (target) => {
+    navigate(`/duty-schedule/targets/${target.id}`);
+  };
+
+  const goManage = () => navigate("/duty-schedule/manage"); // placeholder
+
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Lịch trực — {dateForView}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Bảng xem tổng quan các mục tiêu và ca trực trong ngày
-      </Typography>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        justifyContent="space-between"
+        spacing={2}
+        sx={{ mb: 2 }}
+      >
+        <div>
+          <Typography variant="h4">Lịch trực — {dateForView}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Tổng quan mục tiêu & ca/slot trực trong ngày
+          </Typography>
+        </div>
+        <Button variant="contained" onClick={goManage}>
+          Quản lý lịch trực
+        </Button>
+      </Stack>
 
-      <Grid container spacing={3}>
-        {dutyData.map((target) => (
-          <Grid item xs={12} md={6} key={target.id}>
-            <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
-              <Box sx={{ mb: 1 }}>
-                <Typography variant="h6">{target.name}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {target.location}
-                </Typography>
-              </Box>
+      <CommanderTodayCard commander={dayCommander} date={dateForView} />
 
-              <CommanderCard commander={target.commander} />
-
-              <Box sx={{ mt: 2 }}>
-                <ShiftList shifts={target.shifts} />
-              </Box>
-            </Paper>
+      <Grid container spacing={3} sx={{ mt: 1 }}>
+        {data.map((t) => (
+          <Grid item xs={12} md={6} key={t.id}>
+            <TargetCard target={t} onOpenDetail={openDetail} />
           </Grid>
         ))}
       </Grid>
