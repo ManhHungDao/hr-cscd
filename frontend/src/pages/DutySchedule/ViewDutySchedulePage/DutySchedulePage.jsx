@@ -39,9 +39,9 @@ export default function DutySchedulePage() {
         sx={{ mb: 2 }}
       >
         <div>
-          <Typography variant="h4">Lịch trực — {dateForView}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Tổng quan mục tiêu & ca/slot trực trong ngày
+          <Typography variant="h4">Lịch trực ngày {dateForView}</Typography>
+          <Typography variant="body2" color="var(--color-text)">
+            Tổng quan các ca trực của tất cả các mục tiêu trong ngày
           </Typography>
         </div>
         <Button variant="contained" onClick={goManage}>

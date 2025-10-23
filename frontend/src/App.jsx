@@ -9,6 +9,10 @@ import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
 import DutySchedulePage from "./pages/DutySchedule/ViewDutySchedulePage/DutySchedulePage.jsx";
 import TargetDutyDetailPage from "./pages/DutySchedule/ViewDutySchedulePage/TargetDutyDetailPage.jsx";
 import ManageDutySchedulePage from "./pages/DutySchedule/ManageDutySchedulePage/ManageDutySchedulePage.jsx";
+import TrainingList from "@/pages/Training/TrainingList";
+import TrainingDetail from "@/pages/Training/TrainingDetail";
+import TrainingManage from "@/pages/Training/TrainingManage";
+
 export default function App() {
   return (
     <Routes>
@@ -30,7 +34,9 @@ export default function App() {
           path="/duty-schedule/manage"
           element={<ManageDutySchedulePage />}
         />
-
+        <Route path="/training" element={<TrainingList />} />
+        <Route path="/training/:id" element={<TrainingDetail />} />
+        <Route path="/training/manage" element={<TrainingManage />} />
         {/* Khi bạn thêm các trang khác, chỉ cần thêm vào đây */}
         {/* 
         <Route path="/attendance" element={<AttendancePage />} />

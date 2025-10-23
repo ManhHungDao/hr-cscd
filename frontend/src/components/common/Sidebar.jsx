@@ -49,7 +49,7 @@ const SIDEBAR_ITEMS = [
     name: "Huấn luyện",
     icon: HeartPulse,
     color: "var(--color-text)",
-    href: "/training ",
+    href: "/training",
   },
   {
     name: "Văn bản",
