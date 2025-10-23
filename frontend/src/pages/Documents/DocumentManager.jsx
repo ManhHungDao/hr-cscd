@@ -7,9 +7,7 @@ import {
   Stack,
   Button,
   Card,
-  CardHeader,
   CardContent,
-  Divider,
   Pagination,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -20,7 +18,7 @@ import DocumentDetailDrawer from "@/components/docs/DocumentDetailDrawer";
 import DocumentUploadDialog from "@/components/docs/DocumentUploadDialog";
 import { MOCK_DOCUMENTS } from "@/data/mockDocuments";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 5;
 
 export default function DocumentManagerPage() {
   const [query, setQuery] = useState("");
@@ -72,7 +70,7 @@ export default function DocumentManagerPage() {
   const createDoc = (doc) => setRows((prev) => [doc, ...prev]);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       <Stack
         direction="row"
         alignItems="center"

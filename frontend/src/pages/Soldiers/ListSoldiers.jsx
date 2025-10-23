@@ -210,10 +210,17 @@ export default function AttendanceTable() {
   };
 
   return (
-    <Box sx={{ bgcolor: "var(--color-bg)", minHeight: "100vh", py: 4 }}>
+    <Box sx={{ bgcolor: "var(--color-bg)", minHeight: "100vh", py: 3 }}>
       <Container maxWidth="xl">
         <Grid justifyContent="center">
           <Grid item xs={12} md={11} lg={10}>
+            <Stack direction="row" alignItems="center" sx={{ mb: 2 }}>
+              <Box>
+                <Typography variant="h5" fontWeight={700}>
+                  Danh sách cán bộ chiến sĩ
+                </Typography>
+              </Box>
+            </Stack>
             <Card
               elevation={0}
               sx={{
@@ -222,14 +229,6 @@ export default function AttendanceTable() {
                 background: "linear-gradient(180deg,#fff,#fafafa)",
               }}
             >
-              <CardHeader
-                title={
-                  <Typography fontWeight={800} fontSize={18}>
-                    Danh sách cán bộ chiến sĩ
-                  </Typography>
-                }
-              />
-              <Divider />
               <CardContent>
                 {/* Bộ lọc */}
                 <Stack
@@ -317,20 +316,6 @@ export default function AttendanceTable() {
                   <Table size="small">
                     <TableHead>
                       <TableRow sx={{ bgcolor: theme.palette.grey[50] }}>
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            indeterminate={
-                              selected.length > 0 &&
-                              selected.length < filtered.length
-                            }
-                            checked={
-                              filtered.length > 0 &&
-                              selected.length === filtered.length
-                            }
-                            onChange={(e) => handleToggleAll(e.target.checked)}
-                          />
-                        </TableCell>
                         <TableCell width={280}>Số hiệu CAND / Họ tên</TableCell>
                         <TableCell width={120}>Cấp bậc</TableCell>
                         <TableCell width={160}>Ngày nhập ngũ</TableCell>
@@ -349,12 +334,6 @@ export default function AttendanceTable() {
                         )
                         .map((r) => (
                           <TableRow key={r.id} hover>
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={selected.includes(r.id)}
-                                onChange={() => handleToggleOne(r.id)}
-                              />
-                            </TableCell>
                             <TableCell>
                               <Stack
                                 direction="row"

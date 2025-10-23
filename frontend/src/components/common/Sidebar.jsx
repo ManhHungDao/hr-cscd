@@ -61,7 +61,7 @@ const SIDEBAR_ITEMS = [
     name: "Kho",
     icon: Warehouse,
     color: "var(--color-text)",
-    href: "/warehouse ",
+    href: "/inventory ",
   },
   {
     name: "Cài đặt",

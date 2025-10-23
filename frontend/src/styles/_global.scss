@@ -181,7 +181,7 @@
 /* Từ đây dùng var(--...) để đồng bộ với JSX */
 * {
   box-sizing: border-box;
-  transition: all var(--transition-fast);
+  // transition: all var(--transition-fast);
 }
 
 html,
