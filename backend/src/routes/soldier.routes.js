@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { list, create, detail, update, remove } from "../controllers/soldier.controller.js";
-import { auth } from "../middleware/auth.middleware.js";
-const router = Router();
+const express = require("express");
+const router = express.Router();
+const SoldierController = require("../controllers/SoldierController");
 
-router.get("/", auth, list);
-router.post("/", auth, create);
-router.get("/:id", auth, detail);
-router.put("/:id", auth, update);
-router.delete("/:id", auth, remove);
+// CRUD Routes
+router.get("/", SoldierController.getAllSoldiers);
+router.get("/:id", SoldierController.getSoldierById);
+router.post("/", SoldierController.createSoldier);
+router.put("/:id", SoldierController.updateSoldier);
+router.delete("/:id", SoldierController.deleteSoldier);
 
-export default router;
+module.exports = router;

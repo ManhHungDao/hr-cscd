@@ -1,12 +1,15 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-export async function connectDB(uri) {
-  try {
-    mongoose.set("strictQuery", true);
-    await mongoose.connect(uri, { dbName: "hr_cscd" });
-    console.log("[DB] Mongo connected:", uri);
-  } catch (err) {
-    console.error("[DB] Connection error:", err.message);
-    process.exit(1);
-  }
-}
+const connectDB = async (uri) => {
+  mongoose.set("strictQuery", true);
+  await mongoose.connect(uri, {
+    autoIndex: true,
+    serverSelectionTimeoutMS: 10000,
+  });
+  console.log("✅ MongoDB connected:", mongoose.connection.name);
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB error:", err?.message || err);
+  });
+};
+
+module.exports = { connectDB };
