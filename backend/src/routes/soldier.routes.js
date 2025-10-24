@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import SoldierController from "../controllers/SoldierController.js";
+
 const router = express.Router();
-const SoldierController = require("../controllers/SoldierController");
 
 // CRUD Routes
 router.get("/", SoldierController.getAllSoldiers);
@@ -9,4 +10,4 @@ router.post("/", SoldierController.createSoldier);
 router.put("/:id", SoldierController.updateSoldier);
 router.delete("/:id", SoldierController.deleteSoldier);
 
-module.exports = router;
+export default router;

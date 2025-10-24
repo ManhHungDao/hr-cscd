@@ -1,4 +1,4 @@
-const Soldier = require("../models/soldier");
+const { Soldier } = require("../models/soldier");
 
 /**
  * SoldierController – CRUD cơ bản cho hồ sơ chiến sĩ

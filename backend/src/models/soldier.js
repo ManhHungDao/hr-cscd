@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const PhoneSchema = new Schema(
@@ -93,7 +93,7 @@ const DemographicsSchema = new Schema(
     religion: String,
     maritalStatus: {
       type: String,
-      enum: ["single", "married", "divorced", "widowed"],
+      enum: ["Độc thân", "Kết hôn", "Khác"],
     },
     childrenCount: Number,
   },
@@ -368,4 +368,4 @@ const SoldierSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Soldier", SoldierSchema);
+export const Soldier = mongoose.model("Soldier", SoldierSchema);
