@@ -1,4 +1,3 @@
-// src/pages/Documents/DocumentManager.jsx
 import { useMemo, useState, useEffect } from "react";
 import {
   Box,
@@ -8,17 +7,14 @@ import {
   Button,
   Card,
   CardContent,
-  Pagination,
+  TablePagination,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import DocumentFilters from "@/components/docs/DocumentFilters";
 import DocumentTable from "@/components/docs/DocumentTable";
 import DocumentDetailDrawer from "@/components/docs/DocumentDetailDrawer";
 import DocumentUploadDialog from "@/components/docs/DocumentUploadDialog";
 import { MOCK_DOCUMENTS } from "@/data/mockDocuments";
-
-const PAGE_SIZE = 5;
 
 export default function DocumentManagerPage() {
   const [query, setQuery] = useState("");
@@ -27,15 +23,19 @@ export default function DocumentManagerPage() {
   const [rows, setRows] = useState(MOCK_DOCUMENTS);
   const [preview, setPreview] = useState(null);
   const [openUpload, setOpenUpload] = useState(false);
-  const [page, setPage] = useState(1);
 
-  // Reset trang khi thay đổi bộ lọc
+  // Phân trang kiểu Inventory
+  const [page, setPage] = useState(0); // 0-based
+  const [rowsPerPage, setRowsPerPage] = useState(6);
+
+  // Reset trang khi thay đổi bộ lọc/tìm kiếm
   useEffect(() => {
-    setPage(1);
+    setPage(0);
   }, [query, type, security]);
 
   const filtered = useMemo(() => {
     let data = [...rows];
+
     if (query) {
       const q = query.toLowerCase();
       data = data.filter(
@@ -48,29 +48,29 @@ export default function DocumentManagerPage() {
     }
     if (type) data = data.filter((r) => r.type === type);
     if (security) data = data.filter((r) => r.security === security);
+
     // sort by updatedAt desc
     data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
     return data;
   }, [rows, query, type, security]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const start = (page - 1) * PAGE_SIZE;
-  const currentPageRows = useMemo(
-    () => filtered.slice(start, start + PAGE_SIZE),
-    [filtered, start]
+  const paged = useMemo(
+    () => filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filtered, page, rowsPerPage]
   );
 
   const reset = () => {
     setQuery("");
     setType("");
     setSecurity("");
-    setPage(1);
+    setPage(0);
   };
 
   const createDoc = (doc) => setRows((prev) => [doc, ...prev]);
 
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
+      {/* Header */}
       <Stack
         direction="row"
         alignItems="center"
@@ -95,6 +95,7 @@ export default function DocumentManagerPage() {
         sx={{ borderRadius: 3, boxShadow: "0 10px 30px rgba(2,6,23,0.08)" }}
       >
         <CardContent>
+          {/* Bộ lọc */}
           <DocumentFilters
             query={query}
             setQuery={setQuery}
@@ -104,27 +105,36 @@ export default function DocumentManagerPage() {
             setSecurity={setSecurity}
             onReset={reset}
           />
-          <DocumentTable rows={currentPageRows} onPreview={setPreview} />
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-            <Pagination
-              count={totalPages}
+
+          {/* Bảng với ellipsis + tooltip + fixed layout */}
+          <DocumentTable rows={paged} onPreview={setPreview} />
+
+          {/* Phân trang kiểu Inventory */}
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+            <TablePagination
+              component="div"
+              count={filtered.length}
               page={page}
-              onChange={(_, value) => setPage(value)}
-              color="primary"
-              siblingCount={0}
-              boundaryCount={1}
-              showFirstButton
-              showLastButton
+              onPageChange={(_, newPage) => setPage(newPage)}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={(e) => {
+                setRowsPerPage(parseInt(e.target.value, 10));
+                setPage(0);
+              }}
+              rowsPerPageOptions={[6, 15, 25, 50]}
             />
           </Box>
         </CardContent>
       </Card>
 
+      {/* Drawer xem chi tiết */}
       <DocumentDetailDrawer
         open={!!preview}
         onClose={() => setPreview(null)}
         doc={preview}
       />
+
+      {/* Dialog upload */}
       <DocumentUploadDialog
         open={openUpload}
         onClose={() => setOpenUpload(false)}

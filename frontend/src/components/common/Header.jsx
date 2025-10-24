@@ -46,6 +46,7 @@ export default function Header({
         border: "1px solid rgba(55,65,81,1)", // border-gray-700
         overflow: "hidden",
         boxShadow: "0 8px 24px rgba(15, 23, 42, 0.4)",
+        borderLeft: "none",
       }}
     >
       <Toolbar
@@ -55,12 +56,11 @@ export default function Header({
           mx: "auto",
           px: { xs: 2, sm: 3, lg: 4 },
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           gap: 2,
         }}
       >
-        <Box
+        {/* <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{ flex: 1, maxWidth: 400 }}
@@ -95,7 +95,7 @@ export default function Header({
               },
             }}
           />
-        </Box>
+        </Box> */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
           <Typography
             variant="subtitle1"

@@ -1,164 +1,182 @@
-// src/components/docs/DocumentTable.jsx
 import {
   Box,
+  Chip,
+  IconButton,
+  Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
-  IconButton,
   Tooltip,
-  Avatar,
-  Stack,
   Typography,
-  Paper,
 } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import DescriptionIcon from "@mui/icons-material/Description";
 import ImageIcon from "@mui/icons-material/Image";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import GavelIcon from "@mui/icons-material/Gavel";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import { formatDateTime, truncate, SECURITY_LEVELS } from "@/utils/format";
-import {
-  saveBlobToDisk,
-  saveJSONToDisk,
-  saveDataUrlToDisk,
-} from "@/utils/saveLocal";
+import DescriptionIcon from "@mui/icons-material/Description";
+import PreviewIcon from "@mui/icons-material/Preview";
+import EllipsisCell from "@/components/EllipsisCell";
 
-function SecurityChip({ level }) {
-  const meta = SECURITY_LEVELS.find((x) => x.value === level);
-  if (!meta) return null;
-  const colorMap = {
-    default: "default",
-    info: "info",
-    warning: "warning",
-    error: "error",
-  };
-  return <Chip size="small" label={meta.label} color={colorMap[meta.color]} />;
-}
+const TABLE_HEADERS = [
+  { label: "Mã / Tên", key: "name", width: 320 },
+  { label: "Loại", key: "type", width: 140 },
+  { label: "Bảo mật", key: "security", width: 120 },
+  { label: "Cập nhật", key: "updatedAt", width: 160 },
+  { label: "Ghi chú", key: "notes", width: 260 },
+  { label: "Hành động", key: "actions", width: 120, align: "right" },
+];
 
-function TypeIcon({ type }) {
-  const sx = { fontSize: 20 };
-  switch (type) {
-    case "decision":
-      return <GavelIcon sx={sx} />;
-    case "report":
-      return <AssessmentIcon sx={sx} />;
-    case "memo":
-      return <AssignmentIcon sx={sx} />;
-    case "contract":
-      return <DescriptionIcon sx={sx} />;
-    case "image":
-      return <ImageIcon sx={sx} />;
+const securityChip = (s) => {
+  switch ((s || "").toLowerCase()) {
+    case "public":
+    case "công khai":
+      return { label: "Công khai", color: "success", variant: "variant" };
+    case "internal":
+    case "nội bộ":
+      return { label: "Nội bộ", color: "warning", variant: "variant" };
+    case "confidential":
+    case "mật":
+      return { label: "Mật", color: "error", variant: "variant" };
     default:
-      return <DescriptionIcon sx={sx} />;
+      return { label: s || "-", variant: "variant" };
   }
-}
+};
 
-function humanFileSize(bytes) {
-  const thresh = 1024;
-  if (Math.abs(bytes) < thresh) return bytes + " B";
-  const units = ["KB", "MB", "GB", "TB"];
-  let u = -1;
-  do {
-    bytes /= thresh;
-    ++u;
-  } while (Math.abs(bytes) >= thresh && u < units.length - 1);
-  return bytes.toFixed(1) + " " + units[u];
-}
+// 💡 Icon hiển thị theo loại file
+const typeIcon = (type) => {
+  if (!type) return null;
+  const t = type.toLowerCase();
+  if (t.includes("image") || t.includes("jpg") || t.includes("png"))
+    return <ImageIcon fontSize="small" color="primary" />;
+  // if (t.includes("memo") || t.includes("text") || t.includes("note"))
+  return <DescriptionIcon fontSize="small" color="action" />;
+  // return <DescriptionIcon fontSize="small" color="disabled" />;
+};
 
-async function saveLocally(row) {
-  // Priority: original blob (if uploaded this session) -> preview data URL (for images) -> metadata JSON
-  if (row.__blob) {
-    await saveBlobToDisk(row.__blob, row.name || row.id + ".bin");
-    return;
-  }
-  if (
-    row.preview &&
-    typeof row.preview === "string" &&
-    row.preview.startsWith("data:")
-  ) {
-    const ext = row.preview.includes("svg+xml") ? "svg" : "png";
-    await saveDataUrlToDisk(row.preview, (row.name || row.id) + "." + ext);
-    return;
-  }
-  await saveJSONToDisk(row, (row.name || row.id) + ".json");
-}
-
-export default function DocumentTable({ rows, onPreview }) {
+export default function DocumentTable({ rows = [], onPreview }) {
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ borderRadius: 2, boxShadow: "0 6px 16px rgba(0,0,0,0.08)" }}
-    >
-      <Table size="small">
+    <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+      <Table size="small" sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell>Văn bản</TableCell>
-            <TableCell>Loại</TableCell>
-            <TableCell>Cấp bảo mật</TableCell>
-            <TableCell>Đơn vị</TableCell>
-            <TableCell>Tạo lúc</TableCell>
-            <TableCell>Cập nhật</TableCell>
-            <TableCell>Ghi chú</TableCell>
-            <TableCell align="right">Thao tác</TableCell>
+            {TABLE_HEADERS.map((col) => (
+              <TableCell
+                key={col.key}
+                width={col.width}
+                align={col.align || "left"}
+                sx={{
+                  width: col.width,
+                  maxWidth: col.width,
+                  overflow: "hidden",
+                }}
+              >
+                {col.label}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
+
         <TableBody>
           {rows.map((r) => (
             <TableRow key={r.id} hover>
-              <TableCell>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Avatar variant="rounded" sx={{ width: 28, height: 28 }}>
-                    {r.type === "image" ? (
-                      <ImageIcon fontSize="small" />
-                    ) : (
-                      <DescriptionIcon fontSize="small" />
-                    )}
-                  </Avatar>
-                  <Box>
-                    <Typography fontWeight={600} lineHeight={1.2}>
-                      {r.name}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {r.id} • {humanFileSize(r.size || 0)}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </TableCell>
-              <TableCell>
-                <TypeIcon type={r.type} />
-              </TableCell>
-              <TableCell>
-                <SecurityChip level={r.security} />
-              </TableCell>
-              <TableCell>{r.owner}</TableCell>
-              <TableCell>{formatDateTime(r.createdAt)}</TableCell>
-              <TableCell>{formatDateTime(r.updatedAt)}</TableCell>
-              <TableCell sx={{ maxWidth: 280 }}>
-                {truncate(r.notes, 90)}
-              </TableCell>
-              <TableCell align="right">
-                <Stack direction="row" spacing={0.5} justifyContent="flex-end">
-                  <Tooltip title="Xem nhanh">
-                    <IconButton size="small" onClick={() => onPreview(r)}>
-                      <VisibilityIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Lưu về máy">
-                    <IconButton size="small" onClick={() => saveLocally(r)}>
-                      <DownloadIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </TableCell>
+              {TABLE_HEADERS.map((col) => {
+                const value = (() => {
+                  switch (col.key) {
+                    case "name":
+                      return (
+                        <Stack
+                          direction="column"
+                          spacing={0.25}
+                          sx={{ minWidth: 0 }}
+                        >
+                          <EllipsisCell text={r.name} width={col.width} />
+                          <Typography variant="caption" color="text.secondary">
+                            {r.id}
+                          </Typography>
+                        </Stack>
+                      );
+                    case "type":
+                      return (
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={1}
+                          sx={{ minWidth: 0 }}
+                        >
+                          {typeIcon(r.type)}
+                        </Stack>
+                      );
+                    case "security":
+                      return (
+                        <Chip size="small" {...securityChip(r.security)} />
+                      );
+
+                    case "updatedAt":
+                      return (
+                        <EllipsisCell
+                          text={
+                            r.updatedAt
+                              ? new Date(r.updatedAt).toLocaleString("vi-VN")
+                              : "-"
+                          }
+                          width={col.width}
+                          align={col.align}
+                        />
+                      );
+                    case "notes":
+                      return (
+                        <EllipsisCell
+                          text={r.notes}
+                          width={col.width}
+                          align={col.align}
+                        />
+                      );
+                    case "actions":
+                      return (
+                        <Box sx={{ textAlign: "right" }}>
+                          <Tooltip title="Xem chi tiết">
+                            <IconButton
+                              size="small"
+                              onClick={() => onPreview?.(r)}
+                            >
+                              <PreviewIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      );
+                    default:
+                      return <EllipsisCell text="" width={col.width} />;
+                  }
+                })();
+
+                return (
+                  <TableCell
+                    key={`${r.id}-${col.key}`}
+                    align={col.align || "left"}
+                    sx={{
+                      width: col.width,
+                      maxWidth: col.width,
+                      overflow: "hidden",
+                      "& *": { minWidth: 0 },
+                    }}
+                  >
+                    {value}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           ))}
+
+          {rows.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={TABLE_HEADERS.length} align="center">
+                <Typography color="text.secondary" py={2}>
+                  Không có dữ liệu phù hợp.
+                </Typography>
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

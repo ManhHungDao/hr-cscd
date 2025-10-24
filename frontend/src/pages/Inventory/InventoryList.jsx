@@ -76,11 +76,11 @@ const categoryIcon = (cat) => {
 const statusToChip = (status) => {
   switch (status) {
     case "đạt":
-      return { color: "success", label: "Đạt", variant: "outlined" };
+      return { color: "success", label: "Đạt", variant: "variant" };
     case "bảo dưỡng":
-      return { color: "warning", label: "Bảo dưỡng", variant: "outlined" };
+      return { color: "warning", label: "Bảo dưỡng", variant: "variant" };
     case "hỏng":
-      return { color: "error", label: "Hỏng", variant: "outlined" };
+      return { color: "error", label: "Hỏng", variant: "variant" };
     default:
       return { color: "default", label: status };
   }

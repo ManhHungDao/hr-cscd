@@ -53,9 +53,9 @@ const TABLE_HEADERS = [
   { label: "Loại", key: "category", width: 120 },
   { label: "Số lượng", key: "quantity", width: 100, align: "right" },
   { label: "Đơn vị", key: "unit", width: 110 },
-  { label: "Tình trạng", key: "status", width: 100 },
+  { label: "Tình trạng", key: "status", width: 130 },
   { label: "Ngày nhập", key: "receivedAt", width: 120 },
-  { label: "Ghi chú", key: "note", width: 260 },
+  { label: "Ghi chú", key: "note", width: 230 },
   { label: "Hành động", key: "actions", width: 110, align: "right" },
 ];
 
@@ -76,11 +76,11 @@ const STATUS_OPTIONS = [
 const statusToChip = (s) => {
   switch (s) {
     case "đạt":
-      return { color: "success", label: "Đạt", variant: "outlined" };
+      return { color: "success", label: "Đạt", variant: "variant" };
     case "bảo dưỡng":
-      return { color: "warning", label: "Bảo dưỡng", variant: "outlined" };
+      return { color: "warning", label: "Bảo dưỡng", variant: "variant" };
     case "hỏng":
-      return { color: "error", label: "Hỏng", variant: "outlined" };
+      return { color: "error", label: "Hỏng", variant: "variant" };
     default:
       return { color: "default", label: s };
   }
