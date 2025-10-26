@@ -52,3 +52,23 @@ export const DOC_TYPES = [
   { value: "image", label: "Hình ảnh" },
   { value: "other", label: "Khác" },
 ];
+
+// soldier
+export function fmtDate(d) {
+  if (!d) return "—";
+  try {
+    const dt = typeof d === "string" ? new Date(d) : d;
+    if (Number.isNaN(dt.getTime())) return "—";
+    return dt.toLocaleDateString("vi-VN");
+  } catch {
+    return "—";
+  }
+}
+
+export function safe(n, fallback = "—") {
+  return n ?? fallback;
+}
+
+export function joinNonEmpty(arr, sep = ", ") {
+  return (arr || []).filter(Boolean).join(sep) || "—";
+}

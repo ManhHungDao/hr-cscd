@@ -5,7 +5,7 @@ import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
-import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
+import DetailSoldier from "./pages/Soldiers/DetailSoldier.jsx";
 import DutySchedulePage from "./pages/DutySchedule/ViewDutySchedulePage/DutySchedulePage.jsx";
 import TargetDutyDetailPage from "./pages/DutySchedule/ViewDutySchedulePage/TargetDutyDetailPage.jsx";
 import ManageDutySchedulePage from "./pages/DutySchedule/ManageDutySchedulePage/ManageDutySchedulePage.jsx";
@@ -25,8 +25,8 @@ export default function App() {
       <Route element={<AdminLayout />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/list-soldiers" element={<ListSoldiers />} />
-        <Route path="/detail-profile" element={<SoldierDetail />} />
+        <Route path="/soldiers" element={<ListSoldiers />} />
+        <Route path="/soldiers/:id" element={<DetailSoldier />} />
         <Route path="/duty-schedule" element={<DutySchedulePage />} />
         <Route
           path="/duty-schedule/targets/:id"
@@ -42,11 +42,6 @@ export default function App() {
         <Route path="/documents" element={<DocumentManagerPage />} />
         <Route path="/inventory" element={<InventoryList />} />
         <Route path="/inventory/manage" element={<InventoryManage />} />
-        {/* Khi bạn thêm các trang khác, chỉ cần thêm vào đây */}
-        {/* 
-        <Route path="/attendance" element={<AttendancePage />} />
-        <Route path="/reports" element={<ReportPage />} /> 
-        */}
       </Route>
 
       {/* Trang 404 */}

@@ -36,7 +36,7 @@ const SIDEBAR_ITEMS = [
     name: "Cán bộ chiến sĩ",
     icon: Users,
     color: "var(--color-text)",
-    href: "/list-soldiers",
+    href: "/soldiers",
   },
 
   {
