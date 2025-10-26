@@ -367,5 +367,10 @@ const SoldierSchema = new Schema(
   },
   { timestamps: true }
 );
-
+SoldierSchema.index({
+  fullName: "text",
+  "identityDocs.policeCode": 1,
+  unitPath: 1,
+  updatedAt: -1,
+});
 export const Soldier = mongoose.model("Soldier", SoldierSchema);

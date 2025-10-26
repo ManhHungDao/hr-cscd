@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Avatar,
   Box,
@@ -14,40 +14,40 @@ import {
   Stack,
   Tab,
   Tabs,
-  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PrintIcon from "@mui/icons-material/Print";
 import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
-// ---- mock profile ----
-const mockProfile = {
-  avatar: "https://i.pravatar.cc/120?img=35",
-  name: "THƯỢNG ÚY LÊ THANH BÌNH",
-  rank: "Thượng úy",
-  position: "Tiểu đội trưởng",
-  code: "A213-B456",
-  unitLine: "Trung đội 1, Đại đội C1, 6 Hàoỉ",
-  basic: {
-    "Ngày Sinh": "15/03/1990",
-    "Nơi Sinh": "Hà Nội",
-    "Quê Quán": "Nam Định",
-    "Địa chỉ thường trú":
-      "Địa chỉ Số 123, P. Trần Hưng Đạo, Q Hoàn Kiếm, TP. Hà Nội",
-  },
-  contact: {
-    "Số Điện Thoại": "SDT: 0912 345 778",
-    Email: "binhlt, binhlt@cand.gov.vn",
-    "Tôn Giáo": "Không",
-  },
-  party: {
-    "Ngày vào Công an nhân dân": "15/03/1990",
-    "Ngày vào Đảng": "15/03/1990",
-  },
+import { useNavigate, useParams } from "react-router-dom";
+
+/* ----------------- helpers ----------------- */
+const fmtDate = (v) => {
+  if (!v) return "";
+  try {
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return "";
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  } catch {
+    return "";
+  }
 };
 
+const joinAddress = (addr) =>
+  [addr?.line, addr?.ward, addr?.province].filter(Boolean).join(", ");
+
+const nonEmpty = (obj) =>
+  Object.fromEntries(
+    Object.entries(obj || {}).filter(
+      ([, v]) => v !== undefined && v !== null && String(v).trim() !== ""
+    )
+  );
+
+/* ----------------- small UI pieces ----------------- */
 function SectionCard({ title, children, action }) {
   return (
     <Card
@@ -70,7 +70,6 @@ function SectionCard({ title, children, action }) {
 }
 
 function InfoGrid({ data }) {
-  // Render key:value như description list, 2 cột
   const keys = Object.keys(data || {});
   return (
     <Grid container spacing={2}>
@@ -110,9 +109,93 @@ function TabPanel({ value, index, children }) {
 }
 
 export default function SoldierDetail() {
+  const { id } = useParams(); // lấy :id từ URL
   const navigate = useNavigate();
   const theme = useTheme();
   const [tab, setTab] = useState(0);
+
+  const [raw, setRaw] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        setLoading(true);
+        setErr("");
+        const res = await fetch(
+          `http://localhost:4000/api/soldiers/68fb8438067657a0a1e2e328`,
+          {
+            // const res = await fetch(`http://localhost:4000/api/soldiers/${id}`, {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (alive) setRaw(data);
+      } catch (e) {
+        if (alive) setErr(e?.message || "Lỗi tải dữ liệu");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [id]);
+
+  // Map dữ liệu API -> ViewModel giống mockProfile cũ
+  const profile = useMemo(() => {
+    const d = raw || {};
+    const phones = (d?.contact?.phones || [])
+      .map((p) => `${p.label}: ${p.number}`)
+      .join(" • ");
+    const emails = (d?.contact?.emails || [])
+      .map((e) => `${e.label}: ${e.address}`)
+      .join(" • ");
+
+    const emergency =
+      d?.contact?.emergencyContact &&
+      `${d.contact.emergencyContact.name} (${d.contact.emergencyContact.relation}) - ${d.contact.emergencyContact.phone}`;
+
+    return {
+      avatar: d.avatar || "https://i.pravatar.cc/120?img=35",
+      name: (d.fullName || "").toUpperCase(),
+      rank: d.current?.rank || "",
+      position: d.current?.position || "",
+      code: d.identityDocs?.policeCode || "",
+      unitLine: d.unitPath || "",
+      basic: nonEmpty({
+        "Ngày sinh": fmtDate(d.demographics?.birthDate),
+        "Nơi sinh": d.demographics?.birthPlace,
+        "Quê quán": d.demographics?.hometown,
+        "Địa chỉ thường trú": d.demographics?.permanentAddress,
+        "Địa chỉ hiện tại": joinAddress(d.demographics?.currentAddress),
+        "Nhóm máu": d.demographics?.bloodType,
+        "Tình trạng hôn nhân": d.demographics?.maritalStatus,
+        "Dân tộc": "dsadsa",
+        "Tôn Giáo": d.demographics?.religion,
+        "Số con": d.demographics?.childrenCount,
+      }),
+      contact: nonEmpty({
+        "Số Điện Thoại": phones,
+        "Hộp thư": emails,
+      }),
+      party: nonEmpty({
+        "Ngày vào Công an nhân dân": fmtDate(d.party?.joinedPoliceAt),
+        // API mẫu không có ngày vào Đảng → bỏ qua nếu trống
+      }),
+      // để dùng ở các tab khác sau này:
+      trainings: d.trainings || [],
+      serviceHistory: d.serviceHistory || [],
+      awards: d.awards || [],
+      disciplines: d.disciplines || [],
+      documents: d.documents || [],
+      attendance: d.attendance || null,
+    };
+  }, [raw]);
+
   return (
     <Box sx={{ bgcolor: theme.palette.grey[100], minHeight: "100vh", py: 3 }}>
       <Container maxWidth="xl">
@@ -137,7 +220,7 @@ export default function SoldierDetail() {
               </IconButton>
 
               <Avatar
-                src={mockProfile.avatar}
+                src={profile.avatar}
                 sx={{
                   width: 76,
                   height: 76,
@@ -147,18 +230,27 @@ export default function SoldierDetail() {
               />
               <Box sx={{ flexGrow: 1 }}>
                 <Typography fontWeight={900} fontSize={22} lineHeight={1.2}>
-                  {mockProfile.name}
+                  {loading ? "Đang tải..." : profile.name || "(Không tên)"}
                 </Typography>
-                <Typography color="text.secondary" variant="body2">
-                  Cấp bậc: <b>{mockProfile.rank}</b> &nbsp;•&nbsp; Chức vụ:{" "}
-                  <b>{mockProfile.position}</b>
-                </Typography>
-                <Typography color="text.secondary" variant="body2">
-                  Số hiệu CAND: <b>{mockProfile.code}</b>
-                </Typography>
-                <Typography color="text.secondary" variant="body2">
-                  {mockProfile.unitLine}
-                </Typography>
+
+                {err ? (
+                  <Typography color="error" variant="body2">
+                    Lỗi tải hồ sơ: {err}
+                  </Typography>
+                ) : (
+                  <>
+                    <Typography color="text.secondary" variant="body2">
+                      Cấp bậc: <b>{profile.rank}</b> &nbsp;•&nbsp; Chức vụ:{" "}
+                      <b>{profile.position}</b>
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      Số hiệu CAND: <b>{profile.code}</b>
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      {profile.unitLine}
+                    </Typography>
+                  </>
+                )}
               </Box>
 
               <Stack direction="row" spacing={1}>
@@ -166,10 +258,15 @@ export default function SoldierDetail() {
                   variant="contained"
                   color="success"
                   startIcon={<EditIcon />}
+                  disabled={!!err || loading}
                 >
                   Sửa hồ sơ
                 </Button>
-                <Button variant="outlined" startIcon={<PrintIcon />}>
+                <Button
+                  variant="outlined"
+                  startIcon={<PrintIcon />}
+                  disabled={!!err || loading}
+                >
                   In Sơ yếu công tác
                 </Button>
               </Stack>
@@ -220,8 +317,23 @@ export default function SoldierDetail() {
             <TabPanel value={tab} index={0}>
               <Grid container spacing={2.5}>
                 <Grid item xs={12}>
-                  <SectionCard title="Sơ yếu lý lịch">
-                    <InfoGrid data={mockProfile.basic} />
+                  <SectionCard
+                    title="Sơ yếu lý lịch"
+                    action={
+                      loading ? (
+                        <Chip size="small" label="Đang tải" />
+                      ) : (
+                        <Chip size="small" label="Tải từ API" color="info" />
+                      )
+                    }
+                  >
+                    {err ? (
+                      <Typography color="error">
+                        Không thể tải dữ liệu.
+                      </Typography>
+                    ) : (
+                      <InfoGrid data={profile.basic} />
+                    )}
                   </SectionCard>
                 </Grid>
                 <Grid item xs={12}>
@@ -235,12 +347,35 @@ export default function SoldierDetail() {
                       />
                     }
                   >
-                    <InfoGrid data={mockProfile.contact} />
+                    {err ? (
+                      <Typography color="error">
+                        Không thể tải dữ liệu.
+                      </Typography>
+                    ) : (
+                      <InfoGrid data={profile.contact} />
+                    )}
+                  </SectionCard>
+                </Grid>
+                <Grid item xs={12}>
+                  <SectionCard title="Thông tin gia đình">
+                    {err ? (
+                      <Typography color="error">
+                        Không thể tải dữ liệu.
+                      </Typography>
+                    ) : (
+                      <InfoGrid data={profile.party} />
+                    )}
                   </SectionCard>
                 </Grid>
                 <Grid item xs={12}>
                   <SectionCard title="Thông tin Đảng/Đoàn">
-                    <InfoGrid data={mockProfile.party} />
+                    {err ? (
+                      <Typography color="error">
+                        Không thể tải dữ liệu.
+                      </Typography>
+                    ) : (
+                      <InfoGrid data={profile.party} />
+                    )}
                   </SectionCard>
                 </Grid>
               </Grid>
@@ -254,13 +389,17 @@ export default function SoldierDetail() {
                   <Chip
                     variant="outlined"
                     size="small"
-                    label="Chưa có dữ liệu"
+                    label={
+                      (profile.serviceHistory || []).length
+                        ? `${profile.serviceHistory.length} mục`
+                        : "Chưa có dữ liệu"
+                    }
                   />
                 }
               >
                 <Typography color="text.secondary">
-                  (Khung trống) — Thêm bảng dòng thời gian/biểu mẫu các quyết
-                  định, điều động, bổ nhiệm, lương, … ở đây.
+                  (Khung trống) — Sẽ hiển thị bảng timeline từ API{" "}
+                  <code>serviceHistory</code>.
                 </Typography>
               </SectionCard>
             </TabPanel>
@@ -273,13 +412,17 @@ export default function SoldierDetail() {
                   <Chip
                     variant="outlined"
                     size="small"
-                    label="Chưa có dữ liệu"
+                    label={
+                      (profile.trainings || []).length
+                        ? `${profile.trainings.length} khóa`
+                        : "Chưa có dữ liệu"
+                    }
                   />
                 }
               >
                 <Typography color="text.secondary">
-                  (Khung trống) — Thêm danh sách khóa đào tạo, chứng chỉ, kết
-                  quả bắn súng, võ thuật, v.v…
+                  (Khung trống) — Sẽ hiển thị danh sách <code>trainings</code>{" "}
+                  từ API.
                 </Typography>
               </SectionCard>
             </TabPanel>
@@ -289,16 +432,31 @@ export default function SoldierDetail() {
               <SectionCard
                 title="Khen thưởng & Kỷ luật"
                 action={
-                  <Chip
-                    variant="outlined"
-                    size="small"
-                    label="Chưa có dữ liệu"
-                  />
+                  <Stack direction="row" spacing={1}>
+                    <Chip
+                      variant="outlined"
+                      size="small"
+                      label={
+                        (profile.awards || []).length
+                          ? `${profile.awards.length} khen thưởng`
+                          : "0 khen thưởng"
+                      }
+                    />
+                    <Chip
+                      variant="outlined"
+                      size="small"
+                      label={
+                        (profile.disciplines || []).length
+                          ? `${profile.disciplines.length} kỷ luật`
+                          : "0 kỷ luật"
+                      }
+                    />
+                  </Stack>
                 }
               >
                 <Typography color="text.secondary">
-                  (Khung trống) — Thêm bảng khen thưởng, hình thức kỷ luật (nếu
-                  có) và tài liệu đính kèm.
+                  (Khung trống) — Sẽ hiển thị bảng <code>awards</code>/
+                  <code>disciplines</code>.
                 </Typography>
               </SectionCard>
             </TabPanel>
@@ -311,31 +469,38 @@ export default function SoldierDetail() {
                   <Chip
                     variant="outlined"
                     size="small"
-                    label="Chưa có dữ liệu"
+                    label={
+                      profile.attendance ? "Có dữ liệu" : "Chưa có dữ liệu"
+                    }
                   />
                 }
               >
                 <Typography color="text.secondary">
-                  (Khung trống) — Thêm bảng chấm công theo ngày/ca, vắng phép,
-                  công tác, tăng ca…
+                  (Khung trống) — Sẽ hiển thị bảng chấm công từ{" "}
+                  <code>attendance</code>.
                 </Typography>
               </SectionCard>
             </TabPanel>
 
-            {/* TAB 5: Hồ sở tải lên */}
+            {/* TAB 5: Hồ sơ tải lên */}
             <TabPanel value={tab} index={5}>
               <SectionCard
-                title="Hồ sở tải lên"
+                title="Hồ sơ tải lên"
                 action={
                   <Chip
                     variant="outlined"
                     size="small"
-                    label="Chưa có dữ liệu"
+                    label={
+                      (profile.documents || []).length
+                        ? `${profile.documents.length} tệp`
+                        : "Chưa có dữ liệu"
+                    }
                   />
                 }
               >
                 <Typography color="text.secondary">
-                  (Khung trống) — Tải lên các file/ tệp liên quan đến cán bộ
+                  (Khung trống) — Sẽ hiển thị danh sách file từ{" "}
+                  <code>documents</code>.
                 </Typography>
               </SectionCard>
             </TabPanel>
