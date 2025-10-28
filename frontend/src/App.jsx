@@ -5,7 +5,7 @@ import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 import ListSoldiers from "./pages/Soldiers/ListSoldiers.jsx";
-import DetailSoldier from "./pages/Soldiers/DetailSoldier.jsx";
+import SoldierDetail from "./pages/Soldiers/SoldierDetail.jsx";
 import DutySchedulePage from "./pages/DutySchedule/ViewDutySchedulePage/DutySchedulePage.jsx";
 import TargetDutyDetailPage from "./pages/DutySchedule/ViewDutySchedulePage/TargetDutyDetailPage.jsx";
 import ManageDutySchedulePage from "./pages/DutySchedule/ManageDutySchedulePage/ManageDutySchedulePage.jsx";
@@ -26,8 +26,7 @@ export default function App() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/soldiers" element={<ListSoldiers />} />
-        {/* <Route path="/soldiers/:id" element={<DetailSoldier />} /> */}
-        <Route path="/soldierss" element={<DetailSoldier />} />
+        <Route path="/soldiers/:id" element={<SoldierDetail />} />
         <Route path="/duty-schedule" element={<DutySchedulePage />} />
         <Route
           path="/duty-schedule/targets/:id"

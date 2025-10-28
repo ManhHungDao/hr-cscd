@@ -9,12 +9,8 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  TextField,
-  InputAdornment,
-  Stack,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -60,42 +56,6 @@ export default function Header({
           gap: 2,
         }}
       >
-        {/* <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ flex: 1, maxWidth: 400 }}
-        >
-          <TextField
-            fullWidth
-            size="small"
-            placeholder="Tìm kiếm..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "var(--color-muted)" }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "var(--color-bg)",
-                borderRadius: 3,
-                "& fieldset": { borderColor: "var(--color-border)" },
-                "&:hover fieldset": { borderColor: "var(--color-secondary)" },
-                "&.Mui-focused fieldset": {
-                  borderColor: "var(--color-primary)",
-                },
-                "& input": { color: "var(--color-text)" },
-              },
-              "& .MuiInputBase-input::placeholder": {
-                color: "var(--color-muted)",
-                opacity: 1,
-              },
-            }}
-          />
-        </Box> */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
           <Typography
             variant="subtitle1"
@@ -150,13 +110,8 @@ export default function Header({
             }}
           >
             <MenuItem
-              // onClick={() => {
-              //   setAnchorEl(null);
-              //   onProfile?.();
-              // }}
               component={RouterLink}
-              // to="/soldiers/68fb8438067657a0a1e2e328"
-              to="/soldierss"
+              to="/soldiers/68fb8438067657a0a1e2e328"
               onClick={() => setAnchorEl(null)}
             >
               <PersonIcon fontSize="small" sx={{ mr: 1 }} />

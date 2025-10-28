@@ -1,22 +1,21 @@
-import { Card, CardHeader, CardContent, Divider } from "@mui/material";
+import { Card, CardContent, CardHeader, Divider } from "@mui/material";
 
-export default function SectionCard({
-  title,
-  action,
-  children,
-  dense = false,
-}) {
+export default function SectionCard({ title, children, action }) {
   return (
-    <Card sx={{ borderRadius: 3 }}>
-      {title && (
-        <>
-          <CardHeader title={title} action={action} />
-          <Divider />
-        </>
-      )}
-      <CardContent sx={{ pt: title ? 2 : 1.5, pb: dense ? 1.5 : 2.5 }}>
-        {children}
-      </CardContent>
+    <Card
+      elevation={0}
+      sx={{
+        borderRadius: 3,
+        boxShadow: "0 8px 24px rgba(15,23,42,0.08)",
+        background: "linear-gradient(180deg,#fff,#fafafa)",
+      }}
+    >
+      <CardHeader
+        titleTypographyProps={{ fontWeight: 700, fontSize: 16 }}
+        title={title}
+        action={action}
+      />
+      <CardContent>{children}</CardContent>
     </Card>
   );
 }

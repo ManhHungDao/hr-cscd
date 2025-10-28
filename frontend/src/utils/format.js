@@ -72,3 +72,15 @@ export function safe(n, fallback = "—") {
 export function joinNonEmpty(arr, sep = ", ") {
   return (arr || []).filter(Boolean).join(sep) || "—";
 }
+
+export const joinAddress = (addr) =>
+  [addr?.line, addr?.ward, addr?.province].filter(Boolean).join(", ");
+
+export const labelize = (k) => k.replaceAll(/([A-ZÀ-Ỵ])/g, " $1").trim();
+
+export const nonEmpty = (obj) =>
+  Object.fromEntries(
+    Object.entries(obj || {}).filter(
+      ([, v]) => v !== undefined && v !== null && String(v).trim() !== ""
+    )
+  );
