@@ -1,0 +1,98 @@
+// src/mocks/relatedFiles.mock.js
+// 🔹 Dữ liệu ảo cho trang "Hồ sơ liên quan"
+// ❗ Chỉ chứa metadata, không lưu nội dung file hoặc đường dẫn thật.
+// ❗ Các tệp thật sẽ được liên kết qua FileSystem Access API (phía client).
+
+export const MOCK_RELATED_FILES = [
+  {
+    _id: "rf_001",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Sơ yếu lý lịch 2024",
+    type: "report", // Loại hồ sơ (theo DOC_TYPES)
+    security: "internal", // Mức bảo mật (theo SECURITY_LEVELS)
+    note: "Bản sơ yếu lý lịch cập nhật đầu năm 2024.",
+    uploadedAt: "2024-01-12T08:30:00.000Z",
+    fileName: "so-yeu-ly-lich-2024.pdf",
+    mime: "application/pdf",
+    size: 235_000, // kích thước file (bytes)
+    handleId: null, // sẽ được tạo và lưu trong IndexedDB phía client
+  },
+  {
+    _id: "rf_002",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Chứng chỉ Sơ cứu – Cấp cứu ban đầu",
+    type: "decision",
+    security: "public",
+    note: "Chứng chỉ do Trung tâm Y tế Q7 cấp, ngày 07/04/2021.",
+    uploadedAt: "2021-04-08T09:00:00.000Z",
+    fileName: "chung-chi-so-cuu.jpg",
+    mime: "image/jpeg",
+    size: 120_000,
+    handleId: null,
+  },
+  {
+    _id: "rf_003",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Tổng hợp quá trình công tác",
+    type: "report",
+    security: "confidential",
+    note: "Tổng hợp quá trình công tác phục vụ đánh giá cuối năm.",
+    uploadedAt: "2025-07-02T10:15:00.000Z",
+    fileName: "qua-trinh-cong-tac.xlsx",
+    mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    size: 88_000,
+    handleId: null,
+  },
+  {
+    _id: "rf_004",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Bằng tốt nghiệp Đại học CSND",
+    type: "certificate",
+    security: "public",
+    note: "Ảnh scan bằng tốt nghiệp, cấp năm 2012.",
+    uploadedAt: "2022-05-22T09:40:00.000Z",
+    fileName: "bang-tot-nghiep-csnd.jpg",
+    mime: "image/jpeg",
+    size: 340_000,
+    handleId: null,
+  },
+  {
+    _id: "rf_005",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Hồ sơ thi đua 2023",
+    type: "memo",
+    security: "internal",
+    note: "Tổng hợp đề nghị khen thưởng năm 2023.",
+    uploadedAt: "2023-12-15T15:20:00.000Z",
+    fileName: "ho-so-thi-dua-2023.docx",
+    mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    size: 178_000,
+    handleId: null,
+  },
+  {
+    _id: "rf_006",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Hợp đồng lao động 2020",
+    type: "contract",
+    security: "confidential",
+    note: "Bản hợp đồng gốc ký với Công an Tỉnh, lưu nội bộ.",
+    uploadedAt: "2020-02-01T11:30:00.000Z",
+    fileName: "hop-dong-lao-dong-2020.pdf",
+    mime: "application/pdf",
+    size: 250_000,
+    handleId: null,
+  },
+  {
+    _id: "rf_007",
+    soldierId: "68fb8438067657a0a1e2e328",
+    title: "Giấy chứng nhận hoàn thành huấn luyện 2025",
+    type: "decision",
+    security: "public",
+    note: "Huấn luyện phản ứng nhanh 2025 – Cấp PK02.",
+    uploadedAt: "2025-07-10T08:00:00.000Z",
+    fileName: "chung-nhan-huan-luyen-2025.pdf",
+    mime: "application/pdf",
+    size: 210_000,
+    handleId: null,
+  },
+];

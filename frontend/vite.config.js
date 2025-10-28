@@ -48,6 +48,7 @@ export default defineConfig({
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@layouts": path.resolve(__dirname, "./src/layouts"),
+      "@mock": path.resolve(__dirname, "./src/mocks"),
     },
   },
   esbuild: {
