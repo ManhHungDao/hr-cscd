@@ -26,7 +26,8 @@ export default function App() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/soldiers" element={<ListSoldiers />} />
-        <Route path="/soldiers/:id" element={<DetailSoldier />} />
+        {/* <Route path="/soldiers/:id" element={<DetailSoldier />} /> */}
+        <Route path="/soldierss" element={<DetailSoldier />} />
         <Route path="/duty-schedule" element={<DutySchedulePage />} />
         <Route
           path="/duty-schedule/targets/:id"

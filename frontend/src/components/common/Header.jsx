@@ -155,7 +155,8 @@ export default function Header({
               //   onProfile?.();
               // }}
               component={RouterLink}
-              to="/soldiers/68fb8438067657a0a1e2e328"
+              // to="/soldiers/68fb8438067657a0a1e2e328"
+              to="/soldierss"
               onClick={() => setAnchorEl(null)}
             >
               <PersonIcon fontSize="small" sx={{ mr: 1 }} />
