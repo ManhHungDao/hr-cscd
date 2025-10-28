@@ -1,11 +1,11 @@
-import { Grid } from "@mui/material";
+import { Grid, Container, Stack } from "@mui/material";
 import TimelineSection from "./TimelineSection.jsx";
 import { fmtDate, safe } from "@/utils/format";
 
 export default function SalaryStepsSection({ soldier }) {
   return (
     <>
-      <Container>
+      {/* <Container>
         <Stack spacing={2.5}>
           <PersonalInfoSection person={personForHeader} />
           <CurrentRankPositionSection soldier={soldier} />
@@ -55,7 +55,7 @@ export default function SalaryStepsSection({ soldier }) {
             ]}
           />
         </Grid>
-      </Container>
+      </Container> */}
     </>
   );
 }

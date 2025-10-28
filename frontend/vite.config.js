@@ -29,6 +29,15 @@ export default defineConfig({
     port: 5173,
     open: true,
     host: "localhost",
+    proxy: {
+      // mọi request bắt đầu bằng /api sẽ được chuyển sang backend
+      "/api": {
+        target: "http://localhost:4000",
+        changeOrigin: true,
+        // nếu backend không có prefix /api thì bật rewrite:
+        // rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   resolve: {
     alias: {

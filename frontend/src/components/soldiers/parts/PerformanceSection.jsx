@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import SectionCard from "@/components/common/SectionCard.jsx";
 import { fmtDate, safe } from "@/utils/format";
-import TimelineList from "@/components/common/TimelineList.jsx";
+import TimelineList from "./TimelineList.jsx";
 export default function OrganizationSection({ soldier }) {
   return (
     <>
