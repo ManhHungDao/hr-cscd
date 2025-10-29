@@ -66,20 +66,20 @@ export default function SoldierHeader({ profile, loading, err }) {
           </Box>
 
           <Stack direction="row" spacing={1}>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               startIcon={<EditIcon />}
               disabled={!!err || loading}
             >
               Sửa hồ sơ
-            </Button>
+            </Button> */}
             <Button
               variant="outlined"
               startIcon={<PrintIcon />}
               disabled={!!err || loading}
             >
-              In Sơ yếu công tác
+              In thông tin
             </Button>
           </Stack>
         </Stack>

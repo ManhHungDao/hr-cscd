@@ -1,14 +1,20 @@
+// src/models/Soldier.js
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
+/* =======================
+ * Common Sub-schemas
+ * ======================= */
 const PhoneSchema = new Schema(
   { label: String, number: String },
   { _id: false }
 );
+
 const EmailSchema = new Schema(
   { label: String, address: String },
   { _id: false }
 );
+
 const AddressSchema = new Schema(
   {
     line: String,
@@ -18,53 +24,55 @@ const AddressSchema = new Schema(
   { _id: false }
 );
 
+/* =======================
+ * Career / Position
+ * ======================= */
 const RankPositionSchema = new Schema(
   {
     rank: {
       type: String,
       enum: [
-        // 🧩 Hạ sĩ quan - Chiến sĩ
+        // Hạ sĩ quan - Chiến sĩ
         "Binh nhất",
         "Binh nhì",
         "Hạ sĩ",
         "Trung sĩ",
         "Thượng sĩ",
-
-        // 🧩 Cấp úy
+        // Cấp úy
         "Thiếu úy",
         "Trung úy",
         "Thượng úy",
         "Đại úy",
-
-        // 🧩 Cấp tá
+        // Cấp tá
         "Thiếu tá",
         "Trung tá",
         "Thượng tá",
         "Đại tá",
-
-        // 🧩 Cấp tướng
+        // Cấp tướng
         "Thiếu tướng",
         "Trung tướng",
         "Thượng tướng",
         "Đại tướng",
-
-        // 🧩 Dự phòng (nếu có cán bộ đặc biệt hoặc dân sự)
+        // Dự phòng
         "Không xác định",
       ],
       default: "Binh nhì",
     },
     position: String,
-    from: { type: Date }, // ✅ đổi sang Date
+    from: { type: Date },
     to: { type: Date },
   },
   { _id: false }
 );
 
+/* =======================
+ * Identity / Party
+ * ======================= */
 const IdentityDocsSchema = new Schema(
   {
     policeCode: { type: String, index: true },
     cccd: String,
-    cccdIssuedAt: { type: Date }, // ✅ Date
+    cccdIssuedAt: { type: Date },
     cccdIssuedPlace: String,
   },
   { _id: false }
@@ -78,12 +86,15 @@ const PartyInfoSchema = new Schema(
   { _id: false }
 );
 
+/* =======================
+ * Demographics / Contact
+ * ======================= */
 const DemographicsSchema = new Schema(
   {
     birthDate: { type: Date },
     birthPlace: String,
     hometown: String,
-    permanentAddress: String,
+    permanentAddress: AddressSchema, // thống nhất kiểu AddressSchema
     currentAddress: AddressSchema,
     bloodType: {
       type: String,
@@ -109,18 +120,21 @@ const ContactInfoSchema = new Schema(
   { _id: false }
 );
 
+/* =======================
+ * Education / Skills
+ * ======================= */
 const EducationSchema = new Schema(
   {
     degree: String,
     major: String,
     mode: {
+      // đã loại bỏ "Tại chức" trùng
       type: String,
       enum: [
         "Chính quy",
         "Liên thông",
         "Tại chức",
         "Văn bằng 2",
-        "Tại chức",
         "Đào tạo từ xa",
         "Khác",
       ],
@@ -153,15 +167,18 @@ const SkillsSchema = new Schema(
     itLevel: String,
     language: { type: [LanguageSchema], default: [] },
     qpanLevel: String,
-    drivingLicense: String,
+    drivingLicense: String, // cân nhắc chuẩn hoá A1/A2/B1/B2...
   },
   { _id: false }
 );
 
+/* =======================
+ * Training / History / Salary
+ * ======================= */
 const TrainingItemSchema = new Schema(
   {
     name: { type: String, required: true },
-    time: { type: Date }, // ✅
+    time: { type: Date },
     place: String,
     certNo: String,
     score: String,
@@ -184,7 +201,7 @@ const ServiceHistoryItemSchema = new Schema(
 
 const PromotionItemSchema = new Schema(
   {
-    date: { type: Date }, // ✅
+    date: { type: Date },
     fromRank: String,
     toRank: String,
     decisionNo: String,
@@ -194,16 +211,19 @@ const PromotionItemSchema = new Schema(
 
 const SalaryStepItemSchema = new Schema(
   {
-    date: { type: Date }, // ✅
+    date: { type: Date },
     coefficient: Number,
     decisionNo: String,
   },
   { _id: false }
 );
 
+/* =======================
+ * Awards / Disciplines
+ * ======================= */
 const AwardItemSchema = new Schema(
   {
-    date: { type: Date }, // ✅
+    date: { type: Date },
     title: String,
     decisionNo: String,
     note: String,
@@ -213,8 +233,8 @@ const AwardItemSchema = new Schema(
 
 const DisciplineItemSchema = new Schema(
   {
-    date: { type: Date }, // ✅
-    form: String,
+    date: { type: Date },
+    form: String, // có thể thêm enum nếu nghiệp vụ yêu cầu
     reason: String,
     decisionNo: String,
     note: String,
@@ -222,10 +242,13 @@ const DisciplineItemSchema = new Schema(
   { _id: false }
 );
 
+/* =======================
+ * Attendance (đổi sang mảng)
+ * ======================= */
 const AttendanceSchema = new Schema(
   {
     period: {
-      from: { type: Date }, // ✅
+      from: { type: Date },
       to: { type: Date },
     },
     source: String,
@@ -234,52 +257,52 @@ const AttendanceSchema = new Schema(
   { _id: false }
 );
 
+/* =======================
+ * Documents (metadata only)
+ * ======================= */
 const DocumentItemSchema = new Schema(
   {
-    /** 🔹 Thông tin cơ bản */
-    name: { type: String, required: true }, // Tên hiển thị (VD: "Báo cáo tháng 10")
-    note: { type: String }, // Ghi chú tùy chọn
+    // Thông tin hiển thị
+    name: { type: String, required: true },
+    note: String,
 
-    /** 🔹 Loại file & phân loại */
+    // Phân loại
     type: {
       type: String,
-      enum: ["image", "pdf", "doc", "sheet", "other"], // Loại tệp
+      enum: ["image", "pdf", "doc", "sheet", "other"],
       default: "other",
     },
-    tags: { type: [String], default: [] }, // Từ khóa tìm kiếm (VD: ["báo cáo", "tài chính"])
+    tags: { type: [String], default: [] },
 
-    /** 🔹 Metadata của file thực tế (trên ổ đĩa) */
-    originalName: String, // Tên gốc khi upload
-    storedName: String, // Tên đã đổi khi lưu (để tránh trùng)
-    extension: String, // Phần mở rộng (vd: ".pdf")
-    mimeType: String, // Loại MIME (vd: "application/pdf")
-    size: Number, // Kích thước file (bytes)
-    checksum: String, // SHA256 để kiểm tra toàn vẹn file (tùy chọn)
+    // Metadata file thực tế
+    originalName: String,
+    storedName: String, // nên đảm bảo không trùng trong hệ thống
+    extension: String,
+    mimeType: String,
+    size: Number,
+    checksum: String, // tuỳ chọn
 
-    /** 🔹 Thông tin vị trí lưu trữ */
-    storageType: {
-      type: String,
-      enum: ["local"], // Có thể mở rộng thêm: "s3", "gcs"
-      default: "local",
-    },
-    baseDir: { type: String, default: "uploads" }, // Thư mục gốc (không lộ ổ đĩa thật)
-    relativePath: String, // Đường dẫn tương đối (vd: "soldiers/<id>/<file>.pdf")
+    // Lưu trữ
+    storageType: { type: String, enum: ["local"], default: "local" },
+    baseDir: { type: String, default: "uploads" },
+    relativePath: String,
+    url: String,
 
-    /** 🔹 Tự động sinh URL khi render phía client (tùy backend) */
-    url: String, // Đường dẫn hoặc API tải về (vd: "/api/files/xxx")
-
-    /** 🔹 Thông tin tải lên */
-    uploadedAt: { type: Date, default: Date.now }, // Ngày upload
-    uploadedBy: { type: Schema.Types.ObjectId, ref: "User" }, // Ai tải lên (nếu có hệ user)
+    // Upload info
+    uploadedAt: { type: Date, default: Date.now },
+    uploadedBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
-  { _id: false } // không cần id riêng vì chỉ là subdocument
+  { _id: false }
 );
 
+/* =======================
+ * Family
+ * ======================= */
 const ChildSchema = new Schema(
   {
     name: String,
-    birthDate: { type: Date }, // ✅
-    gender: String,
+    birthDate: { type: Date },
+    gender: { type: String, enum: ["Nam", "Nữ", "Khác"], default: "Khác" },
     school: String,
     note: String,
   },
@@ -289,10 +312,10 @@ const ChildSchema = new Schema(
 const ParentsSchema = new Schema(
   {
     fatherName: String,
-    fatherBirthYear: Number,
+    fatherBirthYear: { type: Number, min: 1900, max: new Date().getFullYear() },
     fatherStatus: String,
     motherName: String,
-    motherBirthYear: Number,
+    motherBirthYear: { type: Number, min: 1900, max: new Date().getFullYear() },
     motherStatus: String,
     address: String,
     phone: String,
@@ -302,13 +325,10 @@ const ParentsSchema = new Schema(
 
 const FamilySchema = new Schema(
   {
-    maritalStatus: {
-      type: String,
-      enum: ["Độc thân", "Kết hôn", "Khác"],
-    },
-    marriageDate: { type: Date }, // ✅
+    maritalStatus: { type: String, enum: ["Độc thân", "Kết hôn", "Khác"] },
+    marriageDate: { type: Date },
     spouseName: String,
-    spouseBirthYear: Number,
+    spouseBirthYear: { type: Number, min: 1900, max: new Date().getFullYear() },
     spouseOccupation: String,
     spouseWorkplace: String,
     spousePhone: String,
@@ -321,7 +341,11 @@ const FamilySchema = new Schema(
           {
             name: String,
             relation: String,
-            birthYear: Number,
+            birthYear: {
+              type: Number,
+              min: 1900,
+              max: new Date().getFullYear(),
+            },
           },
           { _id: false }
         ),
@@ -335,6 +359,9 @@ const FamilySchema = new Schema(
   { _id: false }
 );
 
+/* =======================
+ * Soldier (root)
+ * ======================= */
 const SoldierSchema = new Schema(
   {
     avatar: String,
@@ -358,7 +385,7 @@ const SoldierSchema = new Schema(
     awards: { type: [AwardItemSchema], default: [] },
     disciplines: { type: [DisciplineItemSchema], default: [] },
 
-    attendance: AttendanceSchema,
+    attendances: { type: [AttendanceSchema], default: [] }, // ĐÃ đổi sang mảng
     documents: { type: [DocumentItemSchema], default: [] },
 
     family: FamilySchema,
@@ -367,10 +394,51 @@ const SoldierSchema = new Schema(
   },
   { timestamps: true }
 );
+
+/* =======================
+ * Indexes
+ * ======================= */
+
+// Tên + mã + đơn vị (cơ bản)
 SoldierSchema.index({
   fullName: "text",
   "identityDocs.policeCode": 1,
   unitPath: 1,
   updatedAt: -1,
 });
+
+// Tổ chức & chức vụ hiện tại
+SoldierSchema.index({ unitPath: 1, "current.rank": 1, "current.position": 1 });
+
+// Mốc thời gian để lọc/sort
+SoldierSchema.index({ "serviceHistory.from": 1, "serviceHistory.to": 1 });
+SoldierSchema.index({ "promotions.date": -1 });
+SoldierSchema.index({ "salarySteps.date": -1 });
+SoldierSchema.index({ "awards.date": -1 });
+SoldierSchema.index({ "disciplines.date": -1 });
+SoldierSchema.index({ "trainings.time": -1 });
+
+// Tài liệu (nếu vẫn embed, hỗ trợ lọc theo tag & thời gian)
+SoldierSchema.index({ "documents.tags": 1, "documents.uploadedAt": -1 });
+SoldierSchema.index(
+  { "documents.storedName": 1 },
+  { unique: true, sparse: true }
+);
+
+// Mã ngành/CCCD duy nhất nhưng cho phép trống (partial unique)
+SoldierSchema.index(
+  { "identityDocs.policeCode": 1 },
+  {
+    unique: true,
+    partialFilterExpression: { "identityDocs.policeCode": { $type: "string" } },
+  }
+);
+SoldierSchema.index(
+  { "identityDocs.cccd": 1 },
+  {
+    unique: true,
+    partialFilterExpression: { "identityDocs.cccd": { $type: "string" } },
+  }
+);
+
 export const Soldier = mongoose.model("Soldier", SoldierSchema);

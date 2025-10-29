@@ -377,9 +377,7 @@ export default function RelatedFilesPage({
           spacing={1.5}
           mb={2}
         >
-          <Typography variant="h6">
-            Hồ sơ liên quan (metadata + liên kết tệp cục bộ)
-          </Typography>
+          <Typography variant="h6">Hồ sơ liên quan</Typography>
           <Stack direction="row" spacing={1.5} alignItems="center">
             <TextField
               size="small"
@@ -432,7 +430,7 @@ export default function RelatedFilesPage({
               startIcon={<AddIcon />}
               onClick={openCreate}
             >
-              Thêm metadata
+              Thêm
             </Button>
           </Stack>
         </Stack>

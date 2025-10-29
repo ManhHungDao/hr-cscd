@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { fmtDate, joinAddress, nonEmpty } from "@/utils/format";
 
-export default function useSoldier({ id, apiBase = "http://localhost:4000/api/soldiers" }) {
+export default function useSoldier({
+  id,
+  apiBase = "http://localhost:4000/api/soldiers",
+}) {
   const [raw, setRaw] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -12,7 +15,9 @@ export default function useSoldier({ id, apiBase = "http://localhost:4000/api/so
       try {
         setLoading(true);
         setErr("");
-        const res = await fetch(`${apiBase}/${id}`, { headers: { "Content-Type": "application/json" } });
+        const res = await fetch(`${apiBase}/${id}`, {
+          headers: { "Content-Type": "application/json" },
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (alive) setRaw(data);
@@ -22,13 +27,19 @@ export default function useSoldier({ id, apiBase = "http://localhost:4000/api/so
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [id, apiBase]);
 
   const profile = useMemo(() => {
     const d = raw || {};
-    const phones = (d?.contact?.phones || []).map((p) => `${p.label}: ${p.number}`).join(" • ");
-    const emails = (d?.contact?.emails || []).map((e) => `${e.label}: ${e.address}`).join(" • ");
+    const phones = (d?.contact?.phones || [])
+      .map((p) => `${p.label}: ${p.number}`)
+      .join(" • ");
+    const emails = (d?.contact?.emails || [])
+      .map((e) => `${e.label}: ${e.address}`)
+      .join(" • ");
 
     return {
       avatar: d.avatar || "https://i.pravatar.cc/120?img=35",
@@ -38,18 +49,18 @@ export default function useSoldier({ id, apiBase = "http://localhost:4000/api/so
       code: d.identityDocs?.policeCode || "",
       unitLine: d.unitPath || "",
       basic: nonEmpty({
-        NgàySinh: fmtDate(d.demographics?.birthDate),
-        NơiSinh: d.demographics?.birthPlace,
-        QuêQuán: d.demographics?.hometown,
-        ĐịaChỉThườngTrú: d.demographics?.permanentAddress,
-        ĐịaChỉHiệnTại: joinAddress(d.demographics?.currentAddress),
-        NhómMáu: d.demographics?.bloodType,
-        TìnhTrạngHônNhân: d.demographics?.maritalStatus,
-        DânTộc: d.demographics?.ethnicity,
-        TônGiáo: d.demographics?.religion,
-        SốCon: d.demographics?.childrenCount,
+        "Ngày Sinh": fmtDate(d.demographics?.birthDate),
+        "Nơi Sinh": d.demographics?.birthPlace,
+        "Quê Quán": d.demographics?.hometown,
+        "Dân Tộc": d.demographics?.ethnicity,
+        "Địa Chỉ Thường Trú": d.demographics?.permanentAddress,
+        "Địa Chỉ Hiện Tại": joinAddress(d.demographics?.currentAddress),
+        "Tôn Giáo": d.demographics?.religion,
+        "Nhóm Máu": d.demographics?.bloodType,
+        "Tình Trạng Hôn Nhân": d.demographics?.maritalStatus,
+        "Số Điện Thoại": phones,
+        "Hộp Thư": emails,
       }),
-      contact: nonEmpty({ SốĐiệnThoại: phones, HộpThư: emails }),
       family: nonEmpty(d.family || {}),
       party: nonEmpty({ NgàyVàoCAND: fmtDate(d.party?.joinedPoliceAt) }),
       trainings: d.trainings || [],

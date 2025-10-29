@@ -39,7 +39,7 @@ export default function SoldierDetailPage() {
             <Tab id="tab-2" label="Đào tạo & Huấn luyện" />
             <Tab id="tab-3" label="Khen thưởng Kỷ luật" />
             <Tab id="tab-4" label="Lịch sử Chấm công" />
-            <Tab id="tab-5" label="Hồ sơ liên quan" />
+            <Tab id="tab-5" label="Giấy tờ liên quan" />
           </Tabs>
         }
       >
@@ -53,15 +53,13 @@ export default function SoldierDetailPage() {
                   err={err}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <ContactSection data={profile.contact} err={err} />
-              </Grid>
+              <Grid item xs={12}></Grid>
               <Grid item xs={12}>
                 <FamilySection data={profile.family} err={err} />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <PartySection data={profile.party} err={err} />
-              </Grid>
+              </Grid> */}
             </Grid>
           </TabPanel>
 
