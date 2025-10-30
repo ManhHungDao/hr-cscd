@@ -12,7 +12,6 @@ const DepartmentSchema = new Schema(
     },
 
     name: { type: String, required: true }, // Tên đơn vị
-    code: String, // Mã đơn vị (ví dụ: PK02)
     type: {
       type: String,
       enum: ["Phòng", "Đội", "Tiểu đội", "Khác"],
