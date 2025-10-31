@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { fmtDate, joinAddress, nonEmpty } from "@/utils/format";
-
-export default function useSoldier({
+export function useFetchSoldier({
   id,
   apiBase = "http://localhost:4000/api/soldiers",
 }) {
@@ -10,15 +9,23 @@ export default function useSoldier({
   const [err, setErr] = useState("");
 
   useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
     let alive = true;
+
     (async () => {
       try {
         setLoading(true);
         setErr("");
         const res = await fetch(`${apiBase}/${id}`, {
-          headers: { "Content-Type": "application/json" },
+          // SỬA 3: Dùng 'Accept' thay vì 'Content-Type' cho request GET
+          headers: { Accept: "application/json" },
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
         const data = await res.json();
         if (alive) setRaw(data);
       } catch (e) {
@@ -33,42 +40,31 @@ export default function useSoldier({
   }, [id, apiBase]);
 
   const profile = useMemo(() => {
-    const d = raw || {};
-    const phones = (d?.contact?.phones || [])
-      .map((p) => `${p.label}: ${p.number}`)
-      .join(" • ");
-    const emails = (d?.contact?.emails || [])
-      .map((e) => `${e.label}: ${e.address}`)
-      .join(" • ");
+    if (!raw) return null;
 
+    // SỬA 4: Dùng 'raw' trực tiếp thay vì tạo biến 'd' không cần thiết
     return {
-      avatar: d.avatar || "https://i.pravatar.cc/120?img=35",
-      name: (d.fullName || "").toUpperCase(),
-      rank: d.current?.rank || "",
-      position: d.current?.position || "",
-      code: d.identityDocs?.policeCode || "",
-      unitLine: d.unitPath || "",
+      avatar: raw.avatar,
+      name: (raw.fullName || "").toUpperCase(),
+      rank: raw.current?.rank || "",
+      position: raw.current?.position || "",
+      code: raw.identityDocs?.policeCode || "",
+      unitLine: raw.unitPath || "",
       basic: nonEmpty({
-        "Ngày Sinh": fmtDate(d.demographics?.birthDate),
-        "Nơi Sinh": d.demographics?.birthPlace,
-        "Quê Quán": d.demographics?.hometown,
-        "Dân Tộc": d.demographics?.ethnicity,
-        "Địa Chỉ Thường Trú": d.demographics?.permanentAddress,
-        "Địa Chỉ Hiện Tại": joinAddress(d.demographics?.currentAddress),
-        "Tôn Giáo": d.demographics?.religion,
-        "Nhóm Máu": d.demographics?.bloodType,
-        "Tình Trạng Hôn Nhân": d.demographics?.maritalStatus,
-        "Số Điện Thoại": phones,
-        "Hộp Thư": emails,
+        "Ngày Sinh": fmtDate(raw.demographics?.birthDate),
+        "Nơi Sinh": raw.demographics?.birthPlace,
+        "Quê Quán": raw.demographics?.hometown,
+        "Dân Tộc": raw.demographics?.ethnicity,
+        "Địa Chỉ Thường Trú": raw.demographics?.permanentAddress,
+        "Địa Chỉ Hiện Tại": joinAddress(raw.demographics?.currentAddress),
+        "Tôn Giáo": raw.demographics?.religion,
+        "Nhóm Máu": raw.demographics?.bloodType,
+        "Tình Trạng Hôn Nhân": raw.demographics?.maritalStatus,
+        "Số Điện Thoại": raw.demographics?.phone,
+        "Hộp Thư": raw.demographics?.email,
       }),
-      family: nonEmpty(d.family || {}),
-      party: nonEmpty({ NgàyVàoCAND: fmtDate(d.party?.joinedPoliceAt) }),
-      trainings: d.trainings || [],
-      serviceHistory: d.serviceHistory || [],
-      awards: d.awards || [],
-      disciplines: d.disciplines || [],
-      documents: d.documents || [],
-      attendance: d.attendance || null,
+      family: nonEmpty(raw.family || {}),
+      // ...
     };
   }, [raw]);
 

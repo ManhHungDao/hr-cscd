@@ -11,13 +11,15 @@ const DepartmentSchema = new Schema(
       index: true,
     },
 
+    code: { type: String, trim: true }, // Mã đơn vị (ví dụ: PK02)
     name: { type: String, required: true }, // Tên đơn vị
-    type: {
-      type: String,
-      enum: ["Phòng", "Đội", "Tiểu đội", "Khác"],
-      default: "Đội",
+    departmentId: {
+      type: Schema.Types.ObjectId,
+      ref: "TargetDepartment",
       required: true,
+      index: true,
     },
+
     description: String, // Ghi chú mô tả đơn vị
 
     // 🪖 Cấp bậc của người phụ trách

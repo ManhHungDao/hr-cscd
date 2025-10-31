@@ -111,7 +111,7 @@ export default function Header({
           >
             <MenuItem
               component={RouterLink}
-              to="/soldiers/68fb8438067657a0a1e2e328"
+              to="/soldiers/6904626b64d7cbb818d51b65"
               onClick={() => setAnchorEl(null)}
             >
               <PersonIcon fontSize="small" sx={{ mr: 1 }} />
