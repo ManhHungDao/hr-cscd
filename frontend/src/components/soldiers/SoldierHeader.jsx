@@ -33,6 +33,7 @@ export default function SoldierHeader({ profile, loading, err }) {
 
           <Avatar
             src={profile.avatar}
+            alt={profile.name || "avatar"}
             sx={{
               width: 76,
               height: 76,

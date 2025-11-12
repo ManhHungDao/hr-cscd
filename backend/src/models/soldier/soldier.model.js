@@ -6,7 +6,6 @@ const IdentitySchema = new Schema(
   {
     cccd: String,
     cccdIssuedAt: { type: Date },
-    cccdIssuedPlace: String,
   },
   { _id: false }
 );
@@ -16,6 +15,22 @@ const ImageSchema = new Schema(
     name: String,
     data: Buffer,
     contentType: String,
+  },
+  { _id: false }
+);
+const FamilySubSchema = new Schema(
+  {
+    relation: {
+      type: String,
+      enum: ["Bố", "Mẹ", "Anh", "Chị", "Em", "Vợ", "Chồng", "Con"],
+    },
+    fullName: String,
+    birthDate: Date,
+    occupation: String,
+    hometown: String,
+    permanentAddress: String,
+    address: String,
+    phone: String,
   },
   { _id: false }
 );
@@ -57,8 +72,11 @@ const SoldierSchema = new Schema(
     // 🖼️ Ảnh và ghi chú
     avatar: ImageSchema,
     notes: String,
+    familyMembers: { type: [FamilySubSchema], default: [] },
   },
   { timestamps: true }
 );
 
 export const Soldier = mongoose.model("Soldier", SoldierSchema);
+
+export default Soldier;

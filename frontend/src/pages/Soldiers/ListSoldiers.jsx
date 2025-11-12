@@ -34,7 +34,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-
+import AddSoldier from "./AddSoldier";
 /**
  * AttendanceTable.jsx (fetch từ API)
  * - Lọc theo Đơn vị (động từ unitPath) & Trạng thái
@@ -88,8 +88,8 @@ export default function AttendanceTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [openAdd, setOpenAdd] = useState(false);
   const fileRef = useRef(null);
-
   // Fetch dữ liệu từ API
   useEffect(() => {
     let mounted = true;
@@ -292,21 +292,25 @@ export default function AttendanceTable() {
                   hidden
                   onChange={(e) => handleImportCSV(e.target.files?.[0])}
                 />
-                <ButtonGroup variant="contained">
-                  <Button
-                    startIcon={<FileUploadIcon />}
-                    onClick={() => fileRef.current?.click()}
-                  >
-                    Thêm Excel
-                  </Button>
-                  <Button
-                    startIcon={<DownloadIcon />}
-                    color="inherit"
-                    onClick={handleExportCSV}
-                  >
-                    Xuất Excel
-                  </Button>
-                </ButtonGroup>
+
+                <Button variant="contained" onClick={() => setOpenAdd(true)}>
+                  Thêm
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<FileUploadIcon />}
+                  onClick={() => fileRef.current?.click()}
+                >
+                  Thêm Excel
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<DownloadIcon />}
+                  color="inherit"
+                  onClick={handleExportCSV}
+                >
+                  Xuất Excel
+                </Button>
               </Stack>
 
               {/* Loading */}
@@ -448,6 +452,11 @@ export default function AttendanceTable() {
                 </Typography> */}
             </CardContent>
           </Card>
+          <AddSoldier
+            open={openAdd}
+            onClose={() => setOpenAdd(false)}
+            // onSaved={fetchSoldiers} // hàm load lại danh sách
+          />
         </Grid>
       </Grid>
     </Container>

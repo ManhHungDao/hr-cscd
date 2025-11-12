@@ -1,69 +1,145 @@
-// src/controllers/soldierController.js
-import { Soldier } from "../../models/soldier/soldier.model.js";
+// src/controllers/soldier.controller.js
+import { Soldier } from "../../models/soldier.model.js"; // chỉnh lại path đúng dự án của em
+import mongoose from "mongoose";
 
-// 📍 Lấy tất cả chiến sĩ
-export const getAllSoldiers = async (req, res) => {
-  try {
-    const { q } = req.query; // tìm kiếm theo tên
-    const filter = q ? { fullName: new RegExp(q, "i") } : {};
-    const soldiers = await Soldier.find(filter).sort({ updatedAt: -1 });
-    res.json(soldiers);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Không thể tải danh sách chiến sĩ" });
-  }
-};
+// chuyển avatar từ base64 sang Buffer để lưu đúng với schema ImageSchema
+function normalizeAvatar(avatar) {
+  if (!avatar || !avatar.data) return undefined;
+  return {
+    name: avatar.name || "avatar",
+    data: Buffer.from(avatar.data, "base64"),
+    contentType: avatar.contentType || "image/png",
+  };
+}
 
-// 📍 Lấy 1 chiến sĩ theo ID
-export const getSoldierById = async (req, res) => {
-  try {
-    const soldier = await Soldier.findById(req.params.id);
-    if (!soldier)
-      return res.status(404).json({ error: "Không tìm thấy chiến sĩ" });
-    res.json(soldier);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Lỗi khi tải dữ liệu chiến sĩ" });
-  }
-};
-
-// 📍 Thêm mới chiến sĩ
 export const createSoldier = async (req, res) => {
   try {
-    const newSoldier = new Soldier(req.body);
-    const saved = await newSoldier.save();
-    res.status(201).json(saved);
+    const body = req.body || {};
+
+    const avatar = normalizeAvatar(body.avatar);
+    if (avatar) body.avatar = avatar;
+    else delete body.avatar;
+
+    // mảng người thân nếu không có thì để []
+    if (!Array.isArray(body.familyMembers)) {
+      body.familyMembers = [];
+    }
+
+    const soldier = await Soldier.create(body);
+    return res.status(201).json(soldier);
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: "Không thể tạo mới chiến sĩ" });
+    console.error("createSoldier error:", err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
 
-// 📍 Cập nhật thông tin chiến sĩ
+export const getSoldiers = async (req, res) => {
+  try {
+    const {
+      q, // tìm theo tên
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const filter = {};
+    if (q) {
+      filter.fullName = { $regex: q, $options: "i" };
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const [items, total] = await Promise.all([
+      Soldier.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit)),
+      Soldier.countDocuments(filter),
+    ]);
+
+    return res.json({
+      data: items,
+      total,
+      page: Number(page),
+      limit: Number(limit),
+    });
+  } catch (err) {
+    console.error("getSoldiers error:", err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
+  }
+};
+
+export const getSoldierById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ message: "ID không hợp lệ" });
+    }
+    const soldier = await Soldier.findById(id);
+    if (!soldier) {
+      return res.status(404).json({ message: "Không tìm thấy hồ sơ" });
+    }
+    return res.json(soldier);
+  } catch (err) {
+    console.error("getSoldierById error:", err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
+  }
+};
+
 export const updateSoldier = async (req, res) => {
   try {
-    const updated = await Soldier.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!updated)
-      return res.status(404).json({ error: "Không tìm thấy chiến sĩ" });
-    res.json(updated);
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ message: "ID không hợp lệ" });
+    }
+
+    const body = req.body || {};
+    const avatar = normalizeAvatar(body.avatar);
+    if (avatar) body.avatar = avatar;
+    // nếu front không gửi avatar thì không đè
+    else delete body.avatar;
+
+    if (body.familyMembers && !Array.isArray(body.familyMembers)) {
+      body.familyMembers = [];
+    }
+
+    const soldier = await Soldier.findByIdAndUpdate(
+      id,
+      { $set: body },
+      { new: true }
+    );
+
+    if (!soldier) {
+      return res.status(404).json({ message: "Không tìm thấy hồ sơ" });
+    }
+    return res.json(soldier);
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: "Không thể cập nhật chiến sĩ" });
+    console.error("updateSoldier error:", err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
 
-// 📍 Xóa chiến sĩ
 export const deleteSoldier = async (req, res) => {
   try {
-    const deleted = await Soldier.findByIdAndDelete(req.params.id);
-    if (!deleted)
-      return res.status(404).json({ error: "Không tìm thấy chiến sĩ" });
-    res.json({ message: "Đã xóa chiến sĩ thành công" });
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ message: "ID không hợp lệ" });
+    }
+    const soldier = await Soldier.findByIdAndDelete(id);
+    if (!soldier) {
+      return res.status(404).json({ message: "Không tìm thấy hồ sơ" });
+    }
+    return res.json({ message: "Đã xóa hồ sơ" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Không thể xóa chiến sĩ" });
+    console.error("deleteSoldier error:", err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
