@@ -27,70 +27,24 @@ export default function SoldierDetailPage() {
   const [tab, setTab] = useState(0);
   const { raw, loading, error, fetchOne } = useSoldiers();
 
-  // Tải 1 hồ sơ theo id
   useEffect(() => {
     if (id) fetchOne(id).catch(() => {});
   }, [id, fetchOne]);
 
   const p = useMemo(() => raw ?? {}, [raw]);
-  const err = error;
 
-  const safeArr = useCallback((arr) => (Array.isArray(arr) ? arr : []), []);
-
-  // Convert Buffer -> object URL hoặc data URL cho Avatar + map sang ViewModel của Header
-  const headerData = useMemo(() => {
-    let avatarUrl;
-    const av = p && p.avatar;
-
-    // Ưu tiên tạo object URL để tiết kiệm bộ nhớ; nếu lỗi thì thử data URL base64
-    try {
-      if (av && av.data && av.data.data && av.data.data.length) {
-        const bytes = new Uint8Array(av.data.data);
-        const blob = new Blob([bytes], { type: av.contentType || "image/*" });
-        avatarUrl = URL.createObjectURL(blob);
-      }
-    } catch (_) {
-      try {
-        if (av && av.data && av.data.data && av.data.data.length) {
-          const bin = String.fromCharCode(...new Uint8Array(av.data.data));
-          const b64 = typeof btoa !== "undefined" ? btoa(bin) : "";
-          avatarUrl = `data:${
-            (av && av.contentType) || "image/*"
-          };base64,${b64}`;
-        }
-      } catch {
-        // bỏ qua, để avatar undefined
-      }
-    }
-
-    return {
-      name: (p && p.fullName) || "(Không tên)",
-      avatar: avatarUrl,
-      rank: (p && p.rank) || "",
-      position: (p && p.position) || "",
-      code: (p && p.code) || (p && p.identity && p.identity.cccd) || "",
-      unitLine: (p && p.unitLine) || (p && p.currentAddress) || "",
-    };
+  // Nếu FamilySection mong chờ { members: [...] }
+  const familyData = useMemo(() => {
+    if (p && p.family && Array.isArray(p.family.members)) return p.family;
+    if (Array.isArray(p?.familyMembers)) return { members: p.familyMembers };
+    return { members: [] };
   }, [p]);
 
-  // Thu hồi object URL khi đổi hồ sơ hoặc unmount để tránh leak
-  useEffect(() => {
-    return () => {
-      if (
-        headerData &&
-        headerData.avatar &&
-        headerData.avatar.startsWith("blob:")
-      ) {
-        try {
-          URL.revokeObjectURL(headerData.avatar);
-        } catch {}
-      }
-    };
-  }, [headerData && headerData.avatar]);
+  const safeArr = (arr) => (Array.isArray(arr) ? arr : []);
 
   return (
     <Container maxWidth="xl" sx={{ pt: 3 }}>
-      <SoldierHeader profile={headerData} loading={loading} err={err} />
+      <SoldierHeader profile={p} loading={loading} err={error} />
 
       <Box
         sx={{
@@ -115,12 +69,11 @@ export default function SoldierDetailPage() {
           <Tab label="Giấy tờ liên quan" {...a11yProps(5)} />
         </Tabs>
 
-        {/* Nội dung các tab */}
         {loading ? (
           <Box sx={{ p: 2 }}>Đang tải dữ liệu…</Box>
-        ) : err ? (
+        ) : error ? (
           <Box sx={{ p: 2, color: "error.main" }}>
-            Có lỗi khi tải dữ liệu: {String(err)}
+            Có lỗi khi tải dữ liệu: {String(error)}
           </Box>
         ) : (
           <Box sx={{ maxHeight: "60vh", overflowY: "auto", p: 2 }}>
@@ -128,17 +81,17 @@ export default function SoldierDetailPage() {
               value={tab}
               index={0}
               id="soldier-tabpanel-0"
-              ariaLabelledby="soldier-tab-0"
+              ariaLabelledby="soldier-tab-0" // đảm bảo TabPanel dùng đúng prop này
             >
               <Grid container spacing={2.5}>
                 <Grid item xs={12}>
-                  {/* 👉 Truyền dữ liệu gốc từ server */}
-                  <BasicInfoSection data={p} loading={loading} err={err} />
+                  {/* BasicInfoSection tự flatten nội dung → truyền p là đủ */}
+                  <BasicInfoSection data={p} loading={false} err={null} />
                 </Grid>
 
                 <Grid item xs={12}>
                   <FamilySection
-                    data={(p && p.family) || { members: [] }}
+                    data={{ members: p.familyMembers || [] }}
                     err={null}
                   />
                 </Grid>

@@ -1,16 +1,7 @@
 import { Chip, Typography, Box, CircularProgress } from "@mui/material";
 import SectionCard from "@/components/common/SectionCard";
 import InfoGrid from "@/components/common/InfoGrid";
-
-function fmtDate(d) {
-  if (!d) return "";
-  const dt = typeof d === "string" || typeof d === "number" ? new Date(d) : d;
-  // Nếu chuỗi ISO hợp lệ:
-  if (!isNaN(dt.getTime())) {
-    return dt.toLocaleDateString("vi-VN");
-  }
-  return "";
-}
+import { fmtDate } from "@/utils/format";
 
 export default function BasicInfoSection({ data = {}, loading, err }) {
   if (loading) {
